@@ -13,7 +13,7 @@ const BottomTab = createBottomTabNavigator();
 export default function App() {
   return (
     <>
-      <StatusBar style="light" />
+      <StatusBar style="dark" />
       <GlobalContextProvider>
         <NavigationContainer>
           <BottomTab.Navigator
@@ -30,7 +30,7 @@ export default function App() {
               component={HomeScreen}
               options={{
                 title: "Home",
-                //headerShown: false,
+                headerShown: false,
                 tabBarIcon: ({ color, size }) => (
                   <Ionicons name="home" color={color} size={size} />
                 ),
@@ -41,7 +41,7 @@ export default function App() {
               component={UserScreen}
               options={{
                 title: "Sign in/out",
-                //headerShown: false,
+                headerShown: false,
                 tabBarIcon: ({ color, size }) => (
                   <Ionicons name="person" color={color} size={size} />
                 ),

@@ -1,51 +1,188 @@
 import axios from "axios";
 
-const ncNews = axios.create({
-  baseURL: "https://be-nc-news-1s82.onrender.com/api",
+/////////////////////////////////////////////////////
+const TESTING = false;
+/////////////////////////////////////////////////////
+
+const showUp = axios.create({
+  baseURL: "https://back-end-show-up.onrender.com/api",
 });
 
-export const getUsers = () => {
-  return ncNews.get("/users").then((response) => {
-    return response.data.users;
+// USER AUTHENTICATION
+// expects:
+// username - string
+// password - string
+// returns:
+// success: { token: "JWT token string..."}
+// failure: { message: "Invalid username or password"}
+
+export const authenticateUser = (username, password) => {
+  if (TESTING) {
+    return Promise.resolve({ token: "JWT token" });
+  }
+  const body = { username, password };
+  return showUp.post("/auth", body).then((response) => {
+    return response;
   });
 };
 
-export const getArticles = (queries) => {
-  return ncNews.get("/articles", { params: queries }).then((response) => {
-    return response.data.articles;
+// REGISTRATION OF CLIENT, OR ENTERTAINER
+// expects (for a Client):
+// {
+//   username: "JohnDoe",
+//   password: "password",
+//   first_name: "John",
+//   last_name: "Doe",
+//   email: "client@example.com",
+//   user_type: "Client"
+// }
+// expects (for an Entertainer):
+// {
+//   username: "JohnDoe",
+//   password: "password",
+//   first_name: "John",
+//   last_name: "Doe",
+//   email: "entertainer@example.com",
+//   user_type: "Entertainer"
+//   category: "Juggler",
+//   location: "London",
+//   entertainer_name: "Juggling Joe",
+//   description: "An amazing juggler",
+//   price: 50
+// }
+// returns:
+// success: returns user object created { username: "JohnDoe",... }
+// failure: returns { error: "error message"}
+
+export const registerUser = (data) => {
+  if (TESTING) {
+    return Promise.resolve(data);
+  }
+  return showUp.post("/register", data).then((response) => {
+    return response;
   });
 };
 
-export const getArticleById = (article_id) => {
-  return ncNews.get(`/articles/${article_id}`).then((response) => {
-    return response.data.article;
+// CHECK IF USER-NAME AVAILABLE
+// expects:
+// username - string to be checked for availability
+// returns:
+// if username has NOT been taken: { usernameTaken: false }
+// if username has been taken:     { usernameTaken: true }
+
+export const checkUsername = (username) => {
+  if (TESTING) {
+    return Promise.resolve({ usernameTaken: false });
+  }
+  return showUp.get(`/check-username/${username}`).then((response) => {
+    return response;
   });
 };
 
-export const getCommentsByArticleId = (article_id) => {
-  return ncNews.get(`/articles/${article_id}/comments`).then((response) => {
-    return response.data.comments;
-  });
-};
+// GET LIST OF ENTERTAINERS
+// expects:
+// optional object holding query parameters:
+// {
+//   location: "London",
+//   category: "Juggler",
+//   date: "2024-07-01"
+// }
+// returns:
+// an array of objects with the following structure
+// {
+//   username: "JohnDoe",
+//   password: "password",
+//   first_name: "John",
+//   last_name: "Doe",
+//   email: "entertainer@example.com",
+//   profile_img_url: "image.jpg@example.com",
+//   user_type: "Entertainer",
+//   category: "Juggler",
+//   location: "London",
+//   entertainer_name: "Juggling Joe",
+//   description: "An amazing juggler",
+//   price: 50,
+//   media_id: 42,
+//   urls: ["image1.jpg@example.com", "image2.jpg@example.com"]
+// }
 
-export const patchArticleById = (article_id, data) => {
-  return ncNews.patch(`/articles/${article_id}`, data).then((res) => {
-    return res.data.article;
-  });
-};
+// export const getEntertainers = (queries = {}) => {
+//   const headers = { headers: { Authorization: `Bearer ${token}` } };
+//   return showUp.get("/entertainers", headers).then((response) => {
+//     return response;
+//   });
+// };
 
-export const postCommentByArticleId = (article_id, data) => {
-  return ncNews.post(`/articles/${article_id}/comments`, data).then((res) => {
-    return res.data.comment;
-  });
-};
-
-export const deleteCommentById = (comment_id) => {
-  return ncNews.delete(`/comments/${comment_id}`).then((res) => {});
-};
-
-export const getTopics = () => {
-  return ncNews.get("/topics").then((response) => {
-    return response.data.topics;
+export const getEntertainers = (queries = {}) => {
+  if (TESTING) {
+    return Promise.resolve([
+      {
+        user_id: 1,
+        username: "j_depp",
+        first_name: "Johnny",
+        last_name: "Depp",
+        email: "j.depp@gmail.com",
+        profile_img_url:
+          "https://cdn.britannica.com/89/152989-050-DDF277EA/Johnny-Depp-2011.jpg",
+        user_type: "Entertainer",
+        category: "Juggler",
+        location: "London",
+        entertainer_name: "Johnny the Juggler",
+        description:
+          "A master of balance and coordination, this juggler dazzles audiences with a variety of props including balls, clubs, and rings. Known for their high-energy performances and humorous interactions, they bring a playful and captivating experience to any event",
+        price: 20,
+      },
+      {
+        user_id: 2,
+        username: "e_watson",
+        first_name: "Emma",
+        last_name: "Watson",
+        email: "e.watson@gmail.com",
+        profile_img_url:
+          "https://upload.wikimedia.org/wikipedia/commons/7/7f/Emma_Watson_2013.jpg",
+        user_type: "Entertainer",
+        category: "Violinist",
+        location: "Oxford",
+        entertainer_name: "Emma the Violin Virtuoso",
+        description:
+          "A highly skilled violinist with years of experience, Emma delivers soulful and captivating performances. Perfect for weddings, events, and private concerts.",
+        price: 30,
+      },
+      {
+        user_id: 3,
+        username: "d_radcliffe",
+        first_name: "Daniel",
+        last_name: "Radcliffe",
+        email: "d.radcliffe@gmail.com",
+        profile_img_url:
+          "https://img.huffingtonpost.com/asset/661e23ea2200008623fc6d32.jpeg?cache=Avj37YZQ0T&ops=crop_528_121_1719_1077%2Cscalefit_500_noupscale",
+        user_type: "Entertainer",
+        category: "Juggler",
+        location: "London",
+        entertainer_name: "Dan the Dynamic Juggler",
+        description:
+          "Known for his exceptional juggling skills, Dan brings excitement and fun to every performance. Specializes in juggling a variety of objects with incredible precision.",
+        price: 25,
+      },
+      {
+        user_id: 6,
+        username: "m_smith",
+        first_name: "Maggie",
+        last_name: "Smith",
+        email: "m.smith@gmail.com",
+        profile_img_url:
+          "https://upload.wikimedia.org/wikipedia/commons/thumb/c/cb/Dame_Maggie_Smith_1973_%28fro[…]-Dame_Maggie_Smith_1973_%28front_side%29_%28cropped%29.jpg",
+        user_type: "Entertainer",
+        category: "Violinist",
+        location: "London",
+        entertainer_name: "Maggie the Maestro",
+        description:
+          "An acclaimed violinist known for her stunning performances and mastery of classical music. Ideal for concerts, special events, and private recitals.",
+        price: 35,
+      },
+    ]);
+  }
+  return showUp.get("/entertainers", { params: queries }).then((response) => {
+    return response.data.entertainers;
   });
 };

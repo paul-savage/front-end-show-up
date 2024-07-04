@@ -5,9 +5,6 @@ import {
   Image,
   StyleSheet,
   ScrollView,
-  Modal,
-  Alert,
-  Pressable,
 } from "react-native";
 import { Picker } from "@react-native-picker/picker";
 import { useEffect, useState } from "react";
@@ -20,14 +17,7 @@ const ListEntertainers = ({
   setScreen,
   setEntertainer,
 }) => {
-  const [locations, setLocations] = useState([
-    "All",
-    "London",
-    "Oxford",
-    "Paris",
-    "Madrid",
-    "New York",
-  ]);
+  const [locations, setLocations] = useState(["All", "London", "Oxford"]);
   const [categories, setCategories] = useState(["All", "Juggler", "Violinist"]);
   const [location, setLocation] = useState("All");
   const [category, setCategory] = useState("All");

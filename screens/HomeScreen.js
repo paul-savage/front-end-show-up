@@ -54,7 +54,6 @@ function HomeScreen() {
         setSearchParams={setSearchParams}
         setScreen={setScreen}
         setEntertainer={setEntertainer}
-        setIsLoading={setIsloading}
       />
     );
   }

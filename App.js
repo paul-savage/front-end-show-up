@@ -40,7 +40,7 @@ export default function App() {
               name="User"
               component={UserScreen}
               options={{
-                title: "Sign in/out",
+                title: "User",
                 headerShown: false,
                 tabBarIcon: ({ color, size }) => (
                   <Ionicons name="person" color={color} size={size} />

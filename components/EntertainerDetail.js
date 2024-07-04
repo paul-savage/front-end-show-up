@@ -1,31 +1,91 @@
-import { View, Text, Button, StyleSheet } from "react-native";
+import {
+  View,
+  Text,
+  Button,
+  Image,
+  StyleSheet,
+  ScrollView,
+} from "react-native";
+import { useEffect, useState } from "react";
 
-function EntertainerDetails({ entertainer, setScreen }) {
-  function backHandler() {
+const EntertainerDetail = ({ entertainer, setScreen }) => {
+  useEffect(() => {}, []);
+
+  const backHandler = () => {
     setScreen(0);
-  }
+  };
 
   return (
-    <View style={styles.rootContainer}>
-      <Text>
-        These are the details for{" "}
-        <Text style={styles.highlight}>{entertainer.entertainer_name}</Text>
-      </Text>
-      <Button title="Back to Listings" onPress={backHandler} />
-    </View>
+    <>
+      <View style={styles.rootContainer}>
+        <ScrollView>
+          <View key={entertainer.user_id} style={styles.imageContainer}>
+            <Image
+              style={styles.image}
+              source={{ uri: entertainer.profile_img_url }}
+            />
+            <Text style={styles.eName}>{entertainer.entertainer_name}</Text>
+            <Text style={styles.dName}>Location: {entertainer.location}</Text>
+            <Text style={styles.dName}>Category: {entertainer.category}</Text>
+            <Text style={styles.dName}>Price: {entertainer.price}</Text>
+            <Text style={styles.dName}>{entertainer.description}</Text>
+            <View style={styles.buttonContainer}>
+              <Button title="Back to listings" onPress={backHandler} />
+            </View>
+          </View>
+        </ScrollView>
+      </View>
+    </>
   );
-}
+};
 
-export default EntertainerDetails;
+export default EntertainerDetail;
 
 const styles = StyleSheet.create({
   rootContainer: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
+    marginHorizontal: 16,
+    marginTop: 60,
+    marginBottom: 32,
   },
-  highlight: {
+  outerPickerContainer: {
+    flexDirection: "row",
+    justifyContent: "space-around",
+    alignContent: "center,",
+  },
+  pickerContainer: {
+    borderWidth: 2,
+    borderColor: "lightgrey",
+    borderRadius: 8,
+    marginTop: 8,
+  },
+  pickerItem: {},
+  radio: {
+    marginVertical: 10,
+  },
+  text: {
+    fontSize: 24,
+    textAlign: "center",
+  },
+  eName: {
+    fontSize: 16,
     fontWeight: "bold",
-    color: "#eb1064",
+    textAlign: "center",
+    marginTop: 8,
+  },
+  dName: {
+    textAlign: "center",
+    marginTop: 6,
+  },
+  buttonContainer: {
+    marginTop: 10,
+    marginBottom: 12,
+  },
+  image: {
+    width: "100%",
+    height: 350,
+  },
+  imageContainer: {
+    borderRadius: 16,
+    overflow: "hidden",
   },
 });

@@ -2,7 +2,11 @@ import { View, Text, StyleSheet } from "react-native";
 import { useEffect, useState } from "react";
 import { useContext } from "react";
 import { GlobalContext } from "../context/global-context";
-import { getEntertainers } from "../utils/apicalls";
+import {
+  getEntertainers,
+  getLocations,
+  getCategories,
+} from "../utils/apicalls";
 import LoadingOverlay from "../components/LoadingOverlay";
 import ListEntertainers from "../components/ListEntertainers";
 import EntertainerDetail from "../components/EntertainerDetail";
@@ -50,6 +54,7 @@ function HomeScreen() {
         setSearchParams={setSearchParams}
         setScreen={setScreen}
         setEntertainer={setEntertainer}
+        setIsLoading={setIsloading}
       />
     );
   }

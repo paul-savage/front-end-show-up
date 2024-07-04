@@ -22,7 +22,7 @@ export const authenticateUser = (username, password) => {
   }
   const body = { username, password };
   return showUp.post("/auth", body).then((response) => {
-    return response;
+    return response.data;
   });
 };
 
@@ -59,7 +59,14 @@ export const registerUser = (data) => {
     return Promise.resolve(data);
   }
   return showUp.post("/register", data).then((response) => {
-    return response;
+    return response.data;
+  });
+};
+
+export const me = (token) => {
+  const headers = { headers: { Authorization: `${token}` } };
+  return showUp.get("/me", headers).then((response) => {
+    return response.data;
   });
 };
 

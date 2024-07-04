@@ -3,7 +3,7 @@ import { createContext, useState } from "react";
 export const GlobalContext = createContext();
 
 function GlobalContextProvider({ children }) {
-  const [user, setUser] = useState("");
+  const [user, setUser] = useState({});
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [token, setToken] = useState("");
 

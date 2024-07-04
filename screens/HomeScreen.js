@@ -15,7 +15,7 @@ function HomeScreen() {
   const [entertainer, setEntertainer] = useState(null);
   // choice of screen:
   // 0 - list all entertainers
-  // 1 = list single entertainer
+  // 1 = list single entertainer's details
   const [screen, setScreen] = useState(0);
 
   useEffect(() => {

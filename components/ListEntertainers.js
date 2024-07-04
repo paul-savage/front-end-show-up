@@ -22,6 +22,7 @@ const ListEntertainers = ({
   const [locations, setLocations] = useState([
     "All",
     "London",
+    "Oxford",
     "Paris",
     "Madrid",
     "New York",
@@ -36,6 +37,17 @@ const ListEntertainers = ({
   const handleShowDetails = (item) => {
     setEntertainer(item);
     setScreen(1);
+  };
+
+  const handleSearch = (item) => {
+    const query = {};
+    if (location !== locations[0]) {
+      query.location = location;
+    }
+    if (category !== categories[0]) {
+      query.category = category;
+    }
+    setSearchParams(query);
   };
 
   if (entertainers.length === 0) {
@@ -97,7 +109,7 @@ const ListEntertainers = ({
             </View>
           </View>
           <View style={styles.buttonContainer}>
-            <Button title="Search" color="#3e04c3" onPress={() => {}} />
+            <Button title="Search" color="#3e04c3" onPress={handleSearch} />
           </View>
 
           {entertainers.map((item) => (

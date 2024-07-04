@@ -1,4 +1,11 @@
-import { View, Text, TextInput, Button, StyleSheet } from "react-native";
+import {
+  View,
+  Text,
+  TextInput,
+  Button,
+  StyleSheet,
+  ScrollView,
+} from "react-native";
 import { useContext } from "react";
 import { GlobalContext } from "../context/global-context";
 import { useEffect, useState } from "react";
@@ -177,40 +184,45 @@ function UserScreen({ navigation }) {
 
   if (screen === 0) {
     return (
-      <View style={styles.rootContainer}>
-        <View style={styles.inputContainer}>
-          <Text style={styles.label}>Enter user name:</Text>
-          <TextInput
-            style={styles.input}
-            value={loginName}
-            autoCapitalize="none"
-            autoCorrect="false"
-            onChangeText={handleChangeLoginName}
-          />
-          {isInvalidUser ? (
-            <Text style={styles.invalidInput}>Invalid user name</Text>
-          ) : null}
-          <Text style={styles.label}>Enter password:</Text>
-          <TextInput
-            style={styles.input}
-            value={password}
-            autoCapitalize="none"
-            autoCorrect="false"
-            secureTextEntry="true"
-            onChangeText={handleChangePassword}
-          />
-          {isInvalidPassword ? (
-            <Text style={styles.invalidInput}>Invalid password</Text>
-          ) : null}
-          <Button title="Log In" onPress={handleLogIn} />
-          <Text style={styles.bigOR}>OR</Text>
-          <Text style={styles.label}>Create a profile</Text>
-          <View style={styles.buttonContainer}>
-            <Button title="Customer" onPress={handleCreateCustomer} />
-            <Button title="Entertainer" onPress={handleCreateEntertainer} />
+      <ScrollView style={styles.scrollItem}>
+        <View style={styles.rootContainer}>
+          <View style={styles.inputContainer}>
+            <Text style={styles.label}>Enter user name:</Text>
+            <TextInput
+              style={styles.input}
+              value={loginName}
+              autoCapitalize="none"
+              autoCorrect={false}
+              onChangeText={handleChangeLoginName}
+            />
+            {isInvalidUser ? (
+              <Text style={styles.invalidInput}>Invalid user name</Text>
+            ) : null}
+            <Text style={styles.label}>Enter password:</Text>
+            <TextInput
+              style={styles.input}
+              value={password}
+              autoCapitalize="none"
+              autoCorrect={false}
+              secureTextEntry={true}
+              onChangeText={handleChangePassword}
+            />
+            {isInvalidPassword ? (
+              <Text style={styles.invalidInput}>Invalid password</Text>
+            ) : null}
+            <View style={styles.buttonWrapper}>
+              <Button title="Log In" onPress={handleLogIn} />
+            </View>
+            <Text style={styles.bigOR}>OR</Text>
+            <Text style={styles.label}>Create a profile</Text>
+            <View style={styles.buttonContainer}>
+              <View style={styles.buttonWrapper}></View>
+              <Button title="Customer" onPress={handleCreateCustomer} />
+              <Button title="Entertainer" onPress={handleCreateEntertainer} />
+            </View>
           </View>
         </View>
-      </View>
+      </ScrollView>
     );
   }
 
@@ -221,7 +233,9 @@ function UserScreen({ navigation }) {
           <Text style={styles.label}>
             Logged in as: {user.first_name} {user.last_name}
           </Text>
-          <Button title="Log Out" onPress={handleLogOut} />
+          <View style={styles.buttonWrapper}>
+            <Button title="Log Out" onPress={handleLogOut} />
+          </View>
         </View>
       </View>
     );
@@ -229,151 +243,169 @@ function UserScreen({ navigation }) {
 
   if (screen === 2) {
     return (
-      <View style={styles.rootContainer}>
-        <View style={styles.inputContainer}>
-          <Text style={styles.label}>Enter user name:</Text>
-          <TextInput
-            style={styles.input}
-            value={template.username}
-            autoCapitalize="none"
-            autoCorrect="false"
-            onChangeText={handleChangeClient.bind(this, "username")}
-          />
-          <Text style={styles.label}>Enter password:</Text>
-          <TextInput
-            style={styles.input}
-            value={template.password}
-            autoCapitalize="none"
-            autoCorrect="false"
-            //secureTextEntry="true"
-            onChangeText={handleChangeClient.bind(this, "password")}
-          />
-          <Text style={styles.label}>Enter first name:</Text>
-          <TextInput
-            style={styles.input}
-            value={template.first_name}
-            autoCapitalize="none"
-            autoCorrect="false"
-            onChangeText={handleChangeClient.bind(this, "first_name")}
-          />
-          <Text style={styles.label}>Enter last name:</Text>
-          <TextInput
-            style={styles.input}
-            value={template.last_name}
-            autoCapitalize="none"
-            autoCorrect="false"
-            onChangeText={handleChangeClient.bind(this, "last_name")}
-          />
-          <Text style={styles.label}>Enter email address:</Text>
-          <TextInput
-            style={styles.input}
-            value={template.email}
-            autoCapitalize="none"
-            autoCorrect="false"
-            onChangeText={handleChangeClient.bind(this, "email")}
-          />
-          <Button title="Create Account" onPress={handleClientCreation} />
-          <Button title="Cancel" onPress={handleCancelClientCreation} />
+      <ScrollView style={styles.scrollItem}>
+        <View style={styles.rootContainer}>
+          <View style={styles.inputContainer}>
+            <Text style={styles.label}>Enter user name:</Text>
+            <TextInput
+              style={styles.input}
+              value={template.username}
+              autoCapitalize="none"
+              autoCorrect={false}
+              onChangeText={handleChangeClient.bind(this, "username")}
+            />
+            <Text style={styles.label}>Enter password:</Text>
+            <TextInput
+              style={styles.input}
+              value={template.password}
+              autoCapitalize="none"
+              autoCorrect={false}
+              //secureTextEntry={true}
+              onChangeText={handleChangeClient.bind(this, "password")}
+            />
+            <Text style={styles.label}>Enter first name:</Text>
+            <TextInput
+              style={styles.input}
+              value={template.first_name}
+              autoCapitalize="none"
+              autoCorrect={false}
+              onChangeText={handleChangeClient.bind(this, "first_name")}
+            />
+            <Text style={styles.label}>Enter last name:</Text>
+            <TextInput
+              style={styles.input}
+              value={template.last_name}
+              autoCapitalize="none"
+              autoCorrect={false}
+              onChangeText={handleChangeClient.bind(this, "last_name")}
+            />
+            <Text style={styles.label}>Enter email address:</Text>
+            <TextInput
+              style={styles.input}
+              value={template.email}
+              autoCapitalize="none"
+              autoCorrect={false}
+              onChangeText={handleChangeClient.bind(this, "email")}
+            />
+            <View style={styles.buttonWrapper}>
+              <Button title="Create Account" onPress={handleClientCreation} />
+            </View>
+            <View style={styles.buttonWrapper}>
+              <Button title="Cancel" onPress={handleCancelClientCreation} />
+            </View>
+          </View>
         </View>
-      </View>
+      </ScrollView>
     );
   }
 
   if (screen === 3) {
     return (
-      <View style={styles.rootContainer}>
-        <View style={styles.inputContainer}>
-          <Text style={styles.label}>Enter user name:</Text>
-          <TextInput
-            style={styles.input}
-            value={template.username}
-            autoCapitalize="none"
-            autoCorrect="false"
-            onChangeText={handleChangeEntertainer.bind(this, "username")}
-          />
-          <Text style={styles.label}>Enter password:</Text>
-          <TextInput
-            style={styles.input}
-            value={template.password}
-            autoCapitalize="none"
-            autoCorrect="false"
-            //secureTextEntry="true"
-            onChangeText={handleChangeEntertainer.bind(this, "password")}
-          />
-          <Text style={styles.label}>Enter first name:</Text>
-          <TextInput
-            style={styles.input}
-            value={template.first_name}
-            autoCapitalize="none"
-            autoCorrect="false"
-            onChangeText={handleChangeEntertainer.bind(this, "first_name")}
-          />
-          <Text style={styles.label}>Enter last name:</Text>
-          <TextInput
-            style={styles.input}
-            value={template.last_name}
-            autoCapitalize="none"
-            autoCorrect="false"
-            onChangeText={handleChangeEntertainer.bind(this, "last_name")}
-          />
-          <Text style={styles.label}>Enter email address:</Text>
-          <TextInput
-            style={styles.input}
-            value={template.email}
-            autoCapitalize="none"
-            autoCorrect="false"
-            onChangeText={handleChangeEntertainer.bind(this, "email")}
-          />
-          <Text style={styles.label}>Enter category:</Text>
-          <TextInput
-            style={styles.input}
-            value={template.category}
-            autoCapitalize="none"
-            autoCorrect="false"
-            onChangeText={handleChangeEntertainer.bind(this, "category")}
-          />
-          <Text style={styles.label}>Enter location:</Text>
-          <TextInput
-            style={styles.input}
-            value={template.location}
-            autoCapitalize="none"
-            autoCorrect="false"
-            onChangeText={handleChangeEntertainer.bind(this, "location")}
-          />
-          <Text style={styles.label}>Enter entertainer name:</Text>
-          <TextInput
-            style={styles.input}
-            value={template.entertainer_name}
-            autoCapitalize="none"
-            autoCorrect="false"
-            onChangeText={handleChangeEntertainer.bind(
-              this,
-              "entertainer_name"
-            )}
-          />
-          <Text style={styles.label}>Enter description:</Text>
-          <TextInput
-            style={[styles.input, styles.inputMultiLine]}
-            value={template.description}
-            autoCapitalize="none"
-            autoCorrect="false"
-            multiline={true}
-            numberOfLines={3}
-            onChangeText={handleChangeEntertainer.bind(this, "description")}
-          />
-          <Text style={styles.label}>Enter price:</Text>
-          <TextInput
-            style={styles.input}
-            value={template.price}
-            autoCapitalize="none"
-            autoCorrect="false"
-            keyboardType="number-pad"
-            onChangeText={handleChangeEntertainer.bind(this, "price")}
-          />
-          <Button title="Create Account" onPress={handleEntertainerCreation} />
-          <Button title="Cancel" onPress={handleCancelEntertainerCreation} />
+      <ScrollView style={styles.scrollItem}>
+        <View style={styles.rootContainer}>
+          <View style={styles.inputContainer}>
+            <Text style={styles.label}>Enter user name:</Text>
+            <TextInput
+              style={styles.input}
+              value={template.username}
+              autoCapitalize="none"
+              autoCorrect={false}
+              onChangeText={handleChangeEntertainer.bind(this, "username")}
+            />
+            <Text style={styles.label}>Enter password:</Text>
+            <TextInput
+              style={styles.input}
+              value={template.password}
+              autoCapitalize="none"
+              autoCorrect={false}
+              //secureTextEntry={true}
+              onChangeText={handleChangeEntertainer.bind(this, "password")}
+            />
+            <Text style={styles.label}>Enter first name:</Text>
+            <TextInput
+              style={styles.input}
+              value={template.first_name}
+              autoCapitalize="none"
+              autoCorrect={false}
+              onChangeText={handleChangeEntertainer.bind(this, "first_name")}
+            />
+            <Text style={styles.label}>Enter last name:</Text>
+            <TextInput
+              style={styles.input}
+              value={template.last_name}
+              autoCapitalize="none"
+              autoCorrect={false}
+              onChangeText={handleChangeEntertainer.bind(this, "last_name")}
+            />
+            <Text style={styles.label}>Enter email address:</Text>
+            <TextInput
+              style={styles.input}
+              value={template.email}
+              autoCapitalize="none"
+              autoCorrect={false}
+              onChangeText={handleChangeEntertainer.bind(this, "email")}
+            />
+            <Text style={styles.label}>Enter category:</Text>
+            <TextInput
+              style={styles.input}
+              value={template.category}
+              autoCapitalize="none"
+              autoCorrect={false}
+              onChangeText={handleChangeEntertainer.bind(this, "category")}
+            />
+            <Text style={styles.label}>Enter location:</Text>
+            <TextInput
+              style={styles.input}
+              value={template.location}
+              autoCapitalize="none"
+              autoCorrect={false}
+              onChangeText={handleChangeEntertainer.bind(this, "location")}
+            />
+            <Text style={styles.label}>Enter entertainer name:</Text>
+            <TextInput
+              style={styles.input}
+              value={template.entertainer_name}
+              autoCapitalize="none"
+              autoCorrect={false}
+              onChangeText={handleChangeEntertainer.bind(
+                this,
+                "entertainer_name"
+              )}
+            />
+            <Text style={styles.label}>Enter description:</Text>
+            <TextInput
+              style={[styles.input, styles.inputMultiLine]}
+              value={template.description}
+              autoCapitalize="none"
+              autoCorrect={false}
+              multiline={true}
+              numberOfLines={3}
+              onChangeText={handleChangeEntertainer.bind(this, "description")}
+            />
+            <Text style={styles.label}>Enter price:</Text>
+            <TextInput
+              style={styles.input}
+              value={template.price}
+              autoCapitalize="none"
+              autoCorrect={false}
+              keyboardType="number-pad"
+              onChangeText={handleChangeEntertainer.bind(this, "price")}
+            />
+            <View style={styles.buttonWrapper}>
+              <Button
+                title="Create Account"
+                onPress={handleEntertainerCreation}
+              />
+            </View>
+            <View style={styles.buttonWrapper}>
+              <Button
+                title="Cancel"
+                onPress={handleCancelEntertainerCreation}
+              />
+            </View>
+          </View>
         </View>
-      </View>
+      </ScrollView>
     );
   }
 }
@@ -385,6 +417,10 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
+    marginTop: 100,
+  },
+  scrollItem: {
+    //flex: 1,
   },
   inputContainer: {
     marginHorizontal: 4,
@@ -394,11 +430,14 @@ const styles = StyleSheet.create({
   buttonContainer: {
     flexDirection: "row",
     marginTop: 20,
-    justifyContent: "space-around",
+    justifyContent: "space-evenly",
+  },
+  buttonWrapper: {
+    marginVertical: 8,
   },
   label: {
-    fontSize: 22,
-    //color: GlobalStyles.colors.primary100,
+    fontSize: 18,
+    color: GlobalStyles.colors.primary100,
     color: "black",
     marginBottom: 4,
     textAlign: "center",

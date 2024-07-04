@@ -5,43 +5,60 @@ import { GlobalContext } from "../context/global-context";
 import { getEntertainers } from "../utils/apicalls";
 import LoadingOverlay from "../components/LoadingOverlay";
 import ListEntertainers from "../components/ListEntertainers";
+import EntertainerDetail from "../components/EntertainerDetail";
 
 function HomeScreen() {
   const [searchParams, setSearchParams] = useState({});
   const [isLoading, setIsloading] = useState(true);
-  const [items, setItems] = useState([]);
+  const [entertainers, setEntertainers] = useState([]);
   const [error, setError] = useState(null);
+  const [entertainer, setEntertainer] = useState(null);
+  // choice of screen:
+  // 0 - list all entertainers
+  // 1 = list single entertainer
+  const [screen, setScreen] = useState(0);
 
   useEffect(() => {
     getEntertainers(searchParams)
-      .then((res) => {
-        setItems(res);
+      .then((data) => {
+        setEntertainers(data);
         setIsloading(false);
       })
       .catch((err) => {
         setError("Error fetching entertainers");
+        setIsloading(false);
       });
-  }, []);
+  }, [searchParams]);
 
-  if (error) {
-    return (
-      <View style={styles.rootContainer}>
-        <Text>{error}</Text>
-      </View>
-    );
-  }
+  // if (error) {
+  //   return (
+  //     <View style={styles.rootContainer}>
+  //       <Text>{error}</Text>
+  //     </View>
+  //   );
+  // }
 
   if (isLoading) {
     return <LoadingOverlay />;
   }
 
-  return (
-    <ListEntertainers
-      items={items}
-      searchParams={searchParams}
-      setSearchParams={setSearchParams}
-    />
-  );
+  if (screen === 0) {
+    return (
+      <ListEntertainers
+        entertainers={entertainers}
+        searchParams={searchParams}
+        setSearchParams={setSearchParams}
+        setScreen={setScreen}
+        setEntertainer={setEntertainer}
+      />
+    );
+  }
+
+  if (screen === 1) {
+    return (
+      <EntertainerDetail entertainer={entertainer} setScreen={setScreen} />
+    );
+  }
 }
 
 export default HomeScreen;

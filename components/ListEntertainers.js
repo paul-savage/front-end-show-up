@@ -12,7 +12,13 @@ import {
 import { Picker } from "@react-native-picker/picker";
 import { useEffect, useState } from "react";
 
-const ListEntertainers = ({ items, searchParams, setSearchParams }) => {
+const ListEntertainers = ({
+  entertainers,
+  searchParams,
+  setSearchParams,
+  setScreen,
+  setEntertainer,
+}) => {
   const [locations, setLocations] = useState([
     "All",
     "London",
@@ -24,19 +30,15 @@ const ListEntertainers = ({ items, searchParams, setSearchParams }) => {
   const [location, setLocation] = useState("All");
   const [category, setCategory] = useState("All");
   const [date, setDate] = useState(null);
-  const [modalVisible, setModalVisible] = useState(false);
-  const [modalItem, setModalItem] = useState(null);
 
   useEffect(() => {}, []);
 
   const handleShowDetails = (item) => {
-    setModalItem(item);
-    setTimeout(() => {
-      setModalVisible(true);
-    }, 100);
+    setEntertainer(item);
+    setScreen(1);
   };
 
-  if (items.length === 0) {
+  if (entertainers.length === 0) {
     return (
       <View style={styles.rootContainer}>
         <Text>No entertainers available</Text>
@@ -98,7 +100,7 @@ const ListEntertainers = ({ items, searchParams, setSearchParams }) => {
             <Button title="Search" color="#3e04c3" onPress={() => {}} />
           </View>
 
-          {items.map((item) => (
+          {entertainers.map((item) => (
             <View key={item.user_id} style={styles.imageContainer}>
               <Image
                 style={styles.image}
@@ -119,48 +121,6 @@ const ListEntertainers = ({ items, searchParams, setSearchParams }) => {
           ))}
         </ScrollView>
       </View>
-
-      <View style={styles.centeredView}>
-        <Modal
-          presentationStyle="fullScreen"
-          animationType="slide"
-          visible={modalVisible}
-          onRequestClose={() => {
-            setModalVisible(!modalVisible);
-          }}
-        >
-          <View style={styles.centeredView}>
-            <View style={styles.modalView}>
-              <Text style={styles.modalText}>Hello World!</Text>
-              <Pressable
-                style={[styles.button, styles.buttonClose]}
-                onPress={() => setModalVisible(!modalVisible)}
-              >
-                <Text style={styles.textStyle}>Hide Modal</Text>
-              </Pressable>
-            </View>
-          </View>
-          {/* <View style={styles.centeredView}>
-            <View style={styles.modalView}>
-              <Image
-                style={styles.image}
-                source={{ uri: modalItem.profile_img_url }}
-              />
-              <Text style={styles.eName}>{modalItem.entertainer_name}</Text>
-              <Text style={styles.dName}>Location: {modalItem.location}</Text>
-              <Text style={styles.dName}>Category: {modalItem.category}</Text>
-              <Text style={styles.dName}>Price: {modalItem.price}</Text>
-              <Text style={styles.dName}>{modalItem.description}</Text>
-              <View style={styles.buttonContainer}>
-                <Button
-                  title="Dismiss"
-                  onPress={() => setModalVisible(!modalVisible)}
-                />
-              </View>
-            </View>
-          </View> */}
-        </Modal>
-      </View>
     </>
   );
 };
@@ -177,7 +137,6 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-around",
     alignContent: "center,",
-    //backgroundColor: "grey",
   },
   pickerContainer: {
     borderWidth: 2,
@@ -214,47 +173,5 @@ const styles = StyleSheet.create({
   imageContainer: {
     borderRadius: 16,
     overflow: "hidden",
-  },
-  ///////////////////////////////
-  centeredView: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-    marginTop: 22,
-  },
-  modalView: {
-    margin: 20,
-    backgroundColor: "white",
-    borderRadius: 20,
-    padding: 35,
-    alignItems: "center",
-    shadowColor: "#000",
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.25,
-    shadowRadius: 4,
-    elevation: 5,
-  },
-  button: {
-    borderRadius: 20,
-    padding: 10,
-    elevation: 2,
-  },
-  buttonOpen: {
-    backgroundColor: "#F194FF",
-  },
-  buttonClose: {
-    backgroundColor: "#2196F3",
-  },
-  textStyle: {
-    color: "white",
-    fontWeight: "bold",
-    textAlign: "center",
-  },
-  modalText: {
-    marginBottom: 15,
-    textAlign: "center",
   },
 });

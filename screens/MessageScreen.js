@@ -22,7 +22,11 @@ function MessageScreen() {
   }, [fetchConversations]);
 
   const renderItem = ({ item }) => (
-    <TouchableOpacity onPress={() => navigation.navigate('ConversationScreen', { username: item.username })}>
+    <TouchableOpacity onPress={() => navigation.navigate('ConversationScreen', { 
+      username: item.username, 
+      first_name: item.first_name, 
+      last_name: item.last_name 
+    })}>
       <View style={styles.itemContainer}>
         <Image source={{ uri: item.profile_img_url }} style={styles.avatar} />
         <View style={styles.textContainer}>

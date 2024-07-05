@@ -16,7 +16,10 @@ function MessagingStackNavigator() {
       <Stack.Screen
         name="ConversationScreen"
         component={ConversationScreen}
-        options={({ route }) => ({ title: route.params.username })}
+        options={({ route }) => ({
+          title: `${route.params.first_name} ${route.params.last_name}`,
+          headerBackTitle: 'Messages',
+        })}
       />
     </Stack.Navigator>
   );

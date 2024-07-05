@@ -8,7 +8,6 @@ import {
 } from "react-native";
 import { Picker } from "@react-native-picker/picker";
 import { useEffect, useState } from "react";
-import { getLocations, getCategories } from "../utils/apicalls";
 
 const ListEntertainers = ({
   entertainers,
@@ -16,9 +15,9 @@ const ListEntertainers = ({
   setSearchParams,
   setScreen,
   setEntertainer,
+  locations,
+  categories,
 }) => {
-  const [locations, setLocations] = useState(["All", "London", "Oxford"]);
-  const [categories, setCategories] = useState(["All", "Juggler", "Violinist"]);
   const [location, setLocation] = useState("All");
   const [category, setCategory] = useState("All");
   const [date, setDate] = useState(null);

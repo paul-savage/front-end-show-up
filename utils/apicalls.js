@@ -84,6 +84,15 @@ export const getConversation = (token, username) => {
   });
 };
 
+export const sendMessage = (token, recipientId, message) => {
+  const headers = { headers: { Authorization: `${token}` } };
+  const body = { recipientId, message };
+  console.log(body);
+  return showUp.post('/conversations', body, headers).then((response) => {
+    return response.data;
+  });
+};
+
 // CHECK IF USER-NAME AVAILABLE
 // expects:
 // username - string to be checked for availability

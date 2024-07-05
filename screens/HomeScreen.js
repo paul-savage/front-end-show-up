@@ -10,6 +10,7 @@ import {
 import LoadingOverlay from "../components/LoadingOverlay";
 import ListEntertainers from "../components/ListEntertainers";
 import EntertainerDetail from "../components/EntertainerDetail";
+import BookingForm from "../components/BookingForm";
 
 function HomeScreen() {
   const [searchParams, setSearchParams] = useState({});
@@ -75,6 +76,12 @@ function HomeScreen() {
   if (screen === 1) {
     return (
       <EntertainerDetail entertainer={entertainer} setScreen={setScreen} />
+    );
+  }
+
+  if(screen === 2) {
+    return (
+      <BookingForm entertainer={entertainer} setScreen={setScreen} />
     );
   }
 }

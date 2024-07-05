@@ -27,6 +27,10 @@ function ConversationScreen({ route, navigation }) {
 
   useEffect(() => {
     fetchConversation();
+    const interval = setInterval(fetchConversation, 10000); // Poll every 10 seconds
+
+    // Cleanup interval on unmount
+    return () => clearInterval(interval);
   }, [fetchConversation]);
 
   const handleSendMessage = () => {

@@ -77,6 +77,13 @@ export const conversations = (token) => {
   });
 };
 
+export const getConversation = (token, username) => {
+  const headers = { headers: { Authorization: `${token}` } };
+  return showUp.get(`/conversations/${username}`, headers).then((response) => {
+    return response.data;
+  });
+};
+
 // CHECK IF USER-NAME AVAILABLE
 // expects:
 // username - string to be checked for availability

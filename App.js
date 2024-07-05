@@ -6,9 +6,8 @@ import { Ionicons } from "@expo/vector-icons";
 import HomeScreen from "./screens/HomeScreen";
 import UserScreen from "./screens/UserScreen";
 import BookingsScreen from "./screens/BookingsScreen";
-import MessageScreen from "./screens/MessageScreen";
-
 import GlobalContextProvider from "./context/global-context";
+import MessagingStackNavigator from './components/MessagingStackNavigator';
 
 const BottomTab = createBottomTabNavigator();
 
@@ -51,15 +50,14 @@ export default function App() {
             />
             <BottomTab.Screen
               name="Messaging"
-              component={MessageScreen}
+              component={MessagingStackNavigator}
               options={{
                 title: "Messages",
                 headerShown: false,
                 tabBarIcon: ({ color, size }) => (
                   <Ionicons
                     name="chatbox-ellipses-outline"
-                    color={color}
-                    size={size}
+                    color={color} size={size}
                   />
                 ),
               }}

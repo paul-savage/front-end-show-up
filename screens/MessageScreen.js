@@ -1,12 +1,14 @@
 import React, { useContext, useEffect, useState, useCallback } from 'react';
-import { View, FlatList, StyleSheet, Text, Image, RefreshControl } from 'react-native';
+import { View, FlatList, StyleSheet, Text, Image, TouchableOpacity, RefreshControl } from 'react-native';
 import { GlobalContext } from '../context/global-context';
 import { conversations } from '../utils/apicalls';
+import { useNavigation } from '@react-navigation/native';
 
 function MessageScreen() {
   const { token } = useContext(GlobalContext);
   const [data, setData] = useState([]);
   const [refreshing, setRefreshing] = useState(false);
+  const navigation = useNavigation();
 
   const fetchConversations = useCallback(() => {
     setRefreshing(true);
@@ -20,12 +22,14 @@ function MessageScreen() {
   }, [fetchConversations]);
 
   const renderItem = ({ item }) => (
-    <View style={styles.itemContainer}>
-      <Image source={{ uri: item.profile_img_url }} style={styles.avatar} />
-      <View style={styles.textContainer}>
-        <Text style={styles.name}>{`${item.first_name} ${item.last_name}`}</Text>
+    <TouchableOpacity onPress={() => navigation.navigate('ConversationScreen', { username: item.username })}>
+      <View style={styles.itemContainer}>
+        <Image source={{ uri: item.profile_img_url }} style={styles.avatar} />
+        <View style={styles.textContainer}>
+          <Text style={styles.name}>{`${item.first_name} ${item.last_name}`}</Text>
+        </View>
       </View>
-    </View>
+    </TouchableOpacity>
   );
 
   return (

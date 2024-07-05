@@ -17,19 +17,31 @@ function HomeScreen() {
   const [entertainers, setEntertainers] = useState([]);
   const [error, setError] = useState(null);
   const [entertainer, setEntertainer] = useState(null);
+  const [locations, setLocations] = useState(["All", "London", "Oxford"]);
+  const [categories, setCategories] = useState(["All", "Juggler", "Violinist"]);
   // choice of screen:
   // 0 - list all entertainers
   // 1 = list single entertainer's details
   const [screen, setScreen] = useState(0);
 
   useEffect(() => {
-    getEntertainers(searchParams)
-      .then((data) => {
-        setEntertainers(data);
+    Promise.all([
+      getEntertainers(searchParams),
+      getLocations(),
+      getCategories(),
+    ])
+      .then((arr) => {
+        setEntertainers(arr[0]);
+        const locs = ["All"];
+        arr[1].forEach((loc) => locs.push(loc.location));
+        const cats = ["All"];
+        arr[2].forEach((cat) => cats.push(cat.category));
+        setLocations(locs);
+        setCategories(cats);
         setIsloading(false);
       })
       .catch((err) => {
-        setError("Error fetching entertainers");
+        setError("Error fetching entertainer data");
         setIsloading(false);
       });
   }, [searchParams]);
@@ -54,6 +66,8 @@ function HomeScreen() {
         setSearchParams={setSearchParams}
         setScreen={setScreen}
         setEntertainer={setEntertainer}
+        locations={locations}
+        categories={categories}
       />
     );
   }

@@ -26,6 +26,8 @@ function UserScreen({ navigation }) {
   // choice of screen:
   // 0 - logging in
   // 1 = logged in
+  // 2 - create client form
+  // 3 - create entertainer form
   const [screen, setScreen] = useState(0);
   const [template, setTemplate] = useState({});
 

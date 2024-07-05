@@ -5,6 +5,8 @@ import { Ionicons } from "@expo/vector-icons";
 
 import HomeScreen from "./screens/HomeScreen";
 import UserScreen from "./screens/UserScreen";
+import BookingsScreen from "./screens/BookingsScreen";
+import MessageScreen from "./screens/MessageScreen";
 
 import GlobalContextProvider from "./context/global-context";
 
@@ -33,6 +35,32 @@ export default function App() {
                 headerShown: false,
                 tabBarIcon: ({ color, size }) => (
                   <Ionicons name="home" color={color} size={size} />
+                ),
+              }}
+            />
+            <BottomTab.Screen
+              name="Bookings"
+              component={BookingsScreen}
+              options={{
+                title: "Bookings",
+                headerShown: false,
+                tabBarIcon: ({ color, size }) => (
+                  <Ionicons name="book" color={color} size={size} />
+                ),
+              }}
+            />
+            <BottomTab.Screen
+              name="Messaging"
+              component={MessageScreen}
+              options={{
+                title: "Messages",
+                headerShown: false,
+                tabBarIcon: ({ color, size }) => (
+                  <Ionicons
+                    name="chatbox-ellipses-outline"
+                    color={color}
+                    size={size}
+                  />
                 ),
               }}
             />

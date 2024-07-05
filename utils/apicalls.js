@@ -196,14 +196,12 @@ export const getEntertainers = (queries = {}) => {
 
 export const getLocations = () => {
   return showUp.get("/locations").then((response) => {
-    console.log("Locations---->>>>>", response.data);
-    return response;
+    return response.data;
   });
 };
 
 export const getCategories = () => {
   return showUp.get("/categories").then((response) => {
-    console.log("Categories---->>>>", response.data);
-    return response;
+    return response.data;
   });
 };

@@ -1,15 +1,23 @@
-import React, { useContext, useEffect, useState } from 'react';
-import { View, FlatList, StyleSheet, Text, Image } from 'react-native';
+import React, { useContext, useEffect, useState, useCallback } from 'react';
+import { View, FlatList, StyleSheet, Text, Image, RefreshControl } from 'react-native';
 import { GlobalContext } from '../context/global-context';
 import { conversations } from '../utils/apicalls';
 
 function MessageScreen() {
   const { token } = useContext(GlobalContext);
   const [data, setData] = useState([]);
+  const [refreshing, setRefreshing] = useState(false);
+
+  const fetchConversations = useCallback(() => {
+    setRefreshing(true);
+    conversations(token)
+      .then(setData)
+      .finally(() => setRefreshing(false));
+  }, [token]);
 
   useEffect(() => {
-    conversations(token).then(setData);
-  }, [token]);
+    fetchConversations();
+  }, [fetchConversations]);
 
   const renderItem = ({ item }) => (
     <View style={styles.itemContainer}>
@@ -29,6 +37,9 @@ function MessageScreen() {
         data={data}
         keyExtractor={(item) => item.username}
         renderItem={renderItem}
+        refreshControl={
+          <RefreshControl refreshing={refreshing} onRefresh={fetchConversations} />
+        }
       />
     </View>
   );
@@ -43,14 +54,14 @@ const styles = StyleSheet.create({
   },
   headerContainer: {
     height: 125,
-    alignItems: 'left',
+    alignItems: 'flex-start',
     borderBottomWidth: 1,
     borderBottomColor: '#ccc',
-    backgroundColor: 'yellow'
+    backgroundColor: 'yellow',
   },
   headerTitle: {
-    paddingLeft:15,
-    paddingTop:65,
+    paddingLeft: 15,
+    paddingTop: 65,
     fontSize: 30,
     fontWeight: 'bold',
   },

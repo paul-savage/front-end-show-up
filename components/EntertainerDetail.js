@@ -15,6 +15,10 @@ const EntertainerDetail = ({ entertainer, setScreen }) => {
     setScreen(0);
   };
 
+  const bookingHandler = () => {
+    setScreen(2)
+  }
+
   return (
     <>
       <View style={styles.rootContainer}>
@@ -31,6 +35,7 @@ const EntertainerDetail = ({ entertainer, setScreen }) => {
             <Text style={styles.dName}>{entertainer.description}</Text>
             <View style={styles.buttonContainer}>
               <Button title="Back to listings" onPress={backHandler} />
+              <Button title="Book now!" onPress={bookingHandler} />
             </View>
           </View>
         </ScrollView>

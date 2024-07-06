@@ -63,8 +63,8 @@ const ListEntertainers = ({
 
   return (
     <>
-      <View style={styles.rootContainer}>
-        <ScrollView>
+      <ScrollView>
+        <View style={styles.rootContainer}>
           <View style={styles.outerPickerContainer}>
             <View>
               <Text style={styles.text}>Select location:</Text>
@@ -134,8 +134,8 @@ const ListEntertainers = ({
               </View>
             </View>
           ))}
-        </ScrollView>
-      </View>
+        </View>
+      </ScrollView>
     </>
   );
 };

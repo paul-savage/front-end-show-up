@@ -99,13 +99,13 @@ const styles = StyleSheet.create({
   },
   inputContainer: {
     marginHorizontal: 4,
-    marginVertical: 8,
   },
   bookingContainer: {
     borderRadius: 10,
     borderWidth: 1,
     borderColor: "lightgrey",
     marginTop: 10,
+    marginBottom: 0,
     padding: 8,
   },
   bookingText: {

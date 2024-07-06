@@ -205,3 +205,45 @@ export const getCategories = () => {
     return response.data;
   });
 };
+
+// export const getBookings = (token) => {
+//   const headers = { headers: { Authorization: `${token}` } };
+//   return showUp.get("/bookings", headers).then((response) => {
+//     console.log(response);
+//     return response.data;
+//   });
+// };
+
+export const getBookings = () => {
+  return Promise.resolve([
+    {
+      booking_id: 1,
+      user_id: 9,
+      entertainer_id: 1,
+      booking_date: "2024-06-30T23:00:00.000Z",
+      event_details: "Birthday",
+      address: "123 Main St, London",
+    },
+    {
+      booking_id: 2,
+      user_id: 9,
+      entertainer_id: 2,
+      booking_date: "2024-07-04T23:00:00.000Z",
+      event_details: "Anniversary",
+      address: "321 Maple St, Manchester",
+    },
+    {
+      booking_id: 3,
+      user_id: 9,
+      entertainer_id: 10,
+      booking_date: "2024-07-04T23:00:00.000Z",
+      event_details: "Boxing Match",
+      address: "The Arena, Biff St, Oxford",
+    },
+  ]);
+
+  return showUp.get("/bookings").then((response) => {
+    console.log(response.data);
+    return response.data.bookings;
+  });
+};

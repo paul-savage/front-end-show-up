@@ -14,7 +14,7 @@ import BookingForm from "../components/BookingForm";
 
 function HomeScreen() {
   const [searchParams, setSearchParams] = useState({});
-  const [isLoading, setIsloading] = useState(true);
+  const [isLoading, setIsLoading] = useState(true);
   const [entertainers, setEntertainers] = useState([]);
   const [error, setError] = useState(null);
   const [entertainer, setEntertainer] = useState(null);
@@ -39,11 +39,11 @@ function HomeScreen() {
         arr[2].forEach((cat) => cats.push(cat.category));
         setLocations(locs);
         setCategories(cats);
-        setIsloading(false);
+        setIsLoading(false);
       })
       .catch((err) => {
         setError("Error fetching entertainer data");
-        setIsloading(false);
+        setIsLoading(false);
       });
   }, [searchParams]);
 

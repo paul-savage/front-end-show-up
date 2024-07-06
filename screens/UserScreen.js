@@ -66,6 +66,7 @@ function UserScreen({ navigation }) {
             setUser(response);
             setIsLoggedIn(true);
             setScreen(1);
+            //console.log("Log in Data----->>>>>", response);
           })
           .catch((err) => {
             console.log(err);
@@ -123,13 +124,12 @@ function UserScreen({ navigation }) {
   const handleClientCreation = () => {
     registerUser(template)
       .then((response) => {
-        console.log(response);
+        setUser(response);
       })
       .then(() => {
         authenticateUser(template.username, template.password)
           .then((res) => {
             setToken(res.token);
-            setUser(template);
             setIsLoggedIn(true);
             setScreen(1);
           })
@@ -149,13 +149,12 @@ function UserScreen({ navigation }) {
   const handleEntertainerCreation = () => {
     registerUser(template)
       .then((response) => {
-        console.log(response);
+        setUser(response);
       })
       .then(() => {
         authenticateUser(template.username, template.password)
           .then((res) => {
             setToken(res.token);
-            setUser(template);
             setIsLoggedIn(true);
             setScreen(1);
           })

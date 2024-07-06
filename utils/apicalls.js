@@ -5,7 +5,7 @@ const TESTING = false;
 /////////////////////////////////////////////////////
 
 const showUp = axios.create({
-  baseURL: "https://back-end-show-up.onrender.com/api",
+  baseURL: "http://localhost:9090/api",
 });
 
 // USER AUTHENTICATION

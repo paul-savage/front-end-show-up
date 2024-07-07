@@ -5,6 +5,8 @@ import {
   Button,
   StyleSheet,
   ScrollView,
+  KeyboardAvoidingView,
+  Platform,
 } from "react-native";
 import { useContext } from "react";
 import { GlobalContext } from "../../context/global-context";
@@ -52,59 +54,63 @@ const UserCreateCustomer = ({
   };
 
   return (
-    <ScrollView>
-      <View style={styles.rootContainer}>
-        <View style={styles.inputContainer}>
-          <Text style={styles.label}>Enter user name:</Text>
-          <TextInput
-            style={styles.input}
-            value={template.username}
-            autoCapitalize="none"
-            autoCorrect={false}
-            onChangeText={handleChangeClient.bind(this, "username")}
-          />
-          <Text style={styles.label}>Enter password:</Text>
-          <TextInput
-            style={styles.input}
-            value={template.password}
-            autoCapitalize="none"
-            autoCorrect={false}
-            //secureTextEntry={true}
-            onChangeText={handleChangeClient.bind(this, "password")}
-          />
-          <Text style={styles.label}>Enter first name:</Text>
-          <TextInput
-            style={styles.input}
-            value={template.first_name}
-            autoCapitalize="none"
-            autoCorrect={false}
-            onChangeText={handleChangeClient.bind(this, "first_name")}
-          />
-          <Text style={styles.label}>Enter last name:</Text>
-          <TextInput
-            style={styles.input}
-            value={template.last_name}
-            autoCapitalize="none"
-            autoCorrect={false}
-            onChangeText={handleChangeClient.bind(this, "last_name")}
-          />
-          <Text style={styles.label}>Enter email address:</Text>
-          <TextInput
-            style={styles.input}
-            value={template.email}
-            autoCapitalize="none"
-            autoCorrect={false}
-            onChangeText={handleChangeClient.bind(this, "email")}
-          />
-          <View style={styles.buttonWrapper}>
-            <Button title="Create Account" onPress={handleClientCreation} />
-          </View>
-          <View style={styles.buttonWrapper}>
-            <Button title="Cancel" onPress={handleCancelClientCreation} />
+    <KeyboardAvoidingView
+      behavior={Platform.OS === "ios" ? "padding" : "height"}
+    >
+      <ScrollView>
+        <View style={styles.rootContainer}>
+          <View style={styles.inputContainer}>
+            <Text style={styles.label}>Enter user name:</Text>
+            <TextInput
+              style={styles.input}
+              value={template.username}
+              autoCapitalize="none"
+              autoCorrect={false}
+              onChangeText={handleChangeClient.bind(this, "username")}
+            />
+            <Text style={styles.label}>Enter password:</Text>
+            <TextInput
+              style={styles.input}
+              value={template.password}
+              autoCapitalize="none"
+              autoCorrect={false}
+              //secureTextEntry={true}
+              onChangeText={handleChangeClient.bind(this, "password")}
+            />
+            <Text style={styles.label}>Enter first name:</Text>
+            <TextInput
+              style={styles.input}
+              value={template.first_name}
+              autoCapitalize="none"
+              autoCorrect={false}
+              onChangeText={handleChangeClient.bind(this, "first_name")}
+            />
+            <Text style={styles.label}>Enter last name:</Text>
+            <TextInput
+              style={styles.input}
+              value={template.last_name}
+              autoCapitalize="none"
+              autoCorrect={false}
+              onChangeText={handleChangeClient.bind(this, "last_name")}
+            />
+            <Text style={styles.label}>Enter email address:</Text>
+            <TextInput
+              style={styles.input}
+              value={template.email}
+              autoCapitalize="none"
+              autoCorrect={false}
+              onChangeText={handleChangeClient.bind(this, "email")}
+            />
+            <View style={styles.buttonWrapper}>
+              <Button title="Create Account" onPress={handleClientCreation} />
+            </View>
+            <View style={styles.buttonWrapper}>
+              <Button title="Cancel" onPress={handleCancelClientCreation} />
+            </View>
           </View>
         </View>
-      </View>
-    </ScrollView>
+      </ScrollView>
+    </KeyboardAvoidingView>
   );
 };
 

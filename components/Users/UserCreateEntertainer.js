@@ -5,6 +5,8 @@ import {
   Button,
   StyleSheet,
   ScrollView,
+  KeyboardAvoidingView,
+  Platform,
 } from "react-native";
 import { useContext } from "react";
 import { GlobalContext } from "../../context/global-context";
@@ -55,108 +57,115 @@ const UserCreateEntertainer = ({
   };
 
   return (
-    <ScrollView>
-      <View style={styles.rootContainer}>
-        <View style={styles.inputContainer}>
-          <Text style={styles.label}>Enter user name:</Text>
-          <TextInput
-            style={styles.input}
-            value={template.username}
-            autoCapitalize="none"
-            autoCorrect={false}
-            onChangeText={handleChangeEntertainer.bind(this, "username")}
-          />
-          <Text style={styles.label}>Enter password:</Text>
-          <TextInput
-            style={styles.input}
-            value={template.password}
-            autoCapitalize="none"
-            autoCorrect={false}
-            //secureTextEntry={true}
-            onChangeText={handleChangeEntertainer.bind(this, "password")}
-          />
-          <Text style={styles.label}>Enter first name:</Text>
-          <TextInput
-            style={styles.input}
-            value={template.first_name}
-            autoCapitalize="none"
-            autoCorrect={false}
-            onChangeText={handleChangeEntertainer.bind(this, "first_name")}
-          />
-          <Text style={styles.label}>Enter last name:</Text>
-          <TextInput
-            style={styles.input}
-            value={template.last_name}
-            autoCapitalize="none"
-            autoCorrect={false}
-            onChangeText={handleChangeEntertainer.bind(this, "last_name")}
-          />
-          <Text style={styles.label}>Enter email address:</Text>
-          <TextInput
-            style={styles.input}
-            value={template.email}
-            autoCapitalize="none"
-            autoCorrect={false}
-            onChangeText={handleChangeEntertainer.bind(this, "email")}
-          />
-          <Text style={styles.label}>Enter category:</Text>
-          <TextInput
-            style={styles.input}
-            value={template.category}
-            autoCapitalize="none"
-            autoCorrect={false}
-            onChangeText={handleChangeEntertainer.bind(this, "category")}
-          />
-          <Text style={styles.label}>Enter location:</Text>
-          <TextInput
-            style={styles.input}
-            value={template.location}
-            autoCapitalize="none"
-            autoCorrect={false}
-            onChangeText={handleChangeEntertainer.bind(this, "location")}
-          />
-          <Text style={styles.label}>Enter entertainer name:</Text>
-          <TextInput
-            style={styles.input}
-            value={template.entertainer_name}
-            autoCapitalize="none"
-            autoCorrect={false}
-            onChangeText={handleChangeEntertainer.bind(
-              this,
-              "entertainer_name"
-            )}
-          />
-          <Text style={styles.label}>Enter description:</Text>
-          <TextInput
-            style={[styles.input, styles.inputMultiLine]}
-            value={template.description}
-            autoCapitalize="none"
-            autoCorrect={false}
-            multiline={true}
-            numberOfLines={3}
-            onChangeText={handleChangeEntertainer.bind(this, "description")}
-          />
-          <Text style={styles.label}>Enter price:</Text>
-          <TextInput
-            style={styles.input}
-            value={template.price}
-            autoCapitalize="none"
-            autoCorrect={false}
-            keyboardType="number-pad"
-            onChangeText={handleChangeEntertainer.bind(this, "price")}
-          />
-          <View style={styles.buttonWrapper}>
-            <Button
-              title="Create Account"
-              onPress={handleEntertainerCreation}
+    <KeyboardAvoidingView
+      behavior={Platform.OS === "ios" ? "padding" : "height"}
+    >
+      <ScrollView>
+        <View style={styles.rootContainer}>
+          <View style={styles.inputContainer}>
+            <Text style={styles.label}>Enter user name:</Text>
+            <TextInput
+              style={styles.input}
+              value={template.username}
+              autoCapitalize="none"
+              autoCorrect={false}
+              onChangeText={handleChangeEntertainer.bind(this, "username")}
             />
-          </View>
-          <View style={styles.buttonWrapper}>
-            <Button title="Cancel" onPress={handleCancelEntertainerCreation} />
+            <Text style={styles.label}>Enter password:</Text>
+            <TextInput
+              style={styles.input}
+              value={template.password}
+              autoCapitalize="none"
+              autoCorrect={false}
+              //secureTextEntry={true}
+              onChangeText={handleChangeEntertainer.bind(this, "password")}
+            />
+            <Text style={styles.label}>Enter first name:</Text>
+            <TextInput
+              style={styles.input}
+              value={template.first_name}
+              autoCapitalize="none"
+              autoCorrect={false}
+              onChangeText={handleChangeEntertainer.bind(this, "first_name")}
+            />
+            <Text style={styles.label}>Enter last name:</Text>
+            <TextInput
+              style={styles.input}
+              value={template.last_name}
+              autoCapitalize="none"
+              autoCorrect={false}
+              onChangeText={handleChangeEntertainer.bind(this, "last_name")}
+            />
+            <Text style={styles.label}>Enter email address:</Text>
+            <TextInput
+              style={styles.input}
+              value={template.email}
+              autoCapitalize="none"
+              autoCorrect={false}
+              onChangeText={handleChangeEntertainer.bind(this, "email")}
+            />
+            <Text style={styles.label}>Enter category:</Text>
+            <TextInput
+              style={styles.input}
+              value={template.category}
+              autoCapitalize="none"
+              autoCorrect={false}
+              onChangeText={handleChangeEntertainer.bind(this, "category")}
+            />
+            <Text style={styles.label}>Enter location:</Text>
+            <TextInput
+              style={styles.input}
+              value={template.location}
+              autoCapitalize="none"
+              autoCorrect={false}
+              onChangeText={handleChangeEntertainer.bind(this, "location")}
+            />
+            <Text style={styles.label}>Enter entertainer name:</Text>
+            <TextInput
+              style={styles.input}
+              value={template.entertainer_name}
+              autoCapitalize="none"
+              autoCorrect={false}
+              onChangeText={handleChangeEntertainer.bind(
+                this,
+                "entertainer_name"
+              )}
+            />
+            <Text style={styles.label}>Enter description:</Text>
+            <TextInput
+              style={[styles.input, styles.inputMultiLine]}
+              value={template.description}
+              autoCapitalize="none"
+              autoCorrect={false}
+              multiline={true}
+              numberOfLines={3}
+              onChangeText={handleChangeEntertainer.bind(this, "description")}
+            />
+            <Text style={styles.label}>Enter price:</Text>
+            <TextInput
+              style={styles.input}
+              value={template.price}
+              autoCapitalize="none"
+              autoCorrect={false}
+              keyboardType="number-pad"
+              onChangeText={handleChangeEntertainer.bind(this, "price")}
+            />
+            <View style={styles.buttonWrapper}>
+              <Button
+                title="Create Account"
+                onPress={handleEntertainerCreation}
+              />
+            </View>
+            <View style={styles.buttonWrapper}>
+              <Button
+                title="Cancel"
+                onPress={handleCancelEntertainerCreation}
+              />
+            </View>
           </View>
         </View>
-      </View>
-    </ScrollView>
+      </ScrollView>
+    </KeyboardAvoidingView>
   );
 };
 

@@ -5,7 +5,8 @@ const TESTING = false;
 /////////////////////////////////////////////////////
 
 const showUp = axios.create({
-  baseURL: "http://localhost:9090/api",
+  //baseURL: "http://localhost:9090/api",
+  baseURL: "https://back-end-show-up.onrender.com/api",
 });
 
 // USER AUTHENTICATION
@@ -72,7 +73,7 @@ export const me = (token) => {
 
 export const conversations = (token) => {
   const headers = { headers: { Authorization: `${token}` } };
-  return showUp.get('/conversations', headers).then((response) => {
+  return showUp.get("/conversations", headers).then((response) => {
     return response.data;
   });
 };
@@ -88,7 +89,7 @@ export const sendMessage = (token, recipientId, message) => {
   const headers = { headers: { Authorization: `${token}` } };
   const body = { recipientId, message };
   console.log(body);
-  return showUp.post('/conversations', body, headers).then((response) => {
+  return showUp.post("/conversations", body, headers).then((response) => {
     return response.data;
   });
 };

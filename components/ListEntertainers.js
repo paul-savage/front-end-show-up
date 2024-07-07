@@ -13,10 +13,10 @@ const ListEntertainers = ({
   entertainers,
   searchParams,
   setSearchParams,
-  setScreen,
   setEntertainer,
   locations,
   categories,
+  onShowDetails,
 }) => {
   const [location, setLocation] = useState("All");
   const [category, setCategory] = useState("All");
@@ -39,7 +39,7 @@ const ListEntertainers = ({
 
   const handleShowDetails = (item) => {
     setEntertainer(item);
-    setScreen(1);
+    onShowDetails();
   };
 
   const handleSearch = (item) => {

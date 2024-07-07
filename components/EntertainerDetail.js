@@ -8,17 +8,11 @@ import {
 } from "react-native";
 import { useEffect, useState } from "react";
 
-const EntertainerDetail = ({ entertainer, setScreen }) => {
-  useEffect(() => {}, []);
-
-  const backHandler = () => {
-    setScreen(0);
-  };
-
-  const bookingHandler = () => {
-    setScreen(2)
-  }
-
+const EntertainerDetail = ({
+  entertainer,
+  onShowEntertainers,
+  onBookingForm,
+}) => {
   return (
     <>
       <View style={styles.rootContainer}>
@@ -34,8 +28,8 @@ const EntertainerDetail = ({ entertainer, setScreen }) => {
             <Text style={styles.dName}>Price: {entertainer.price}</Text>
             <Text style={styles.dName}>{entertainer.description}</Text>
             <View style={styles.buttonContainer}>
-              <Button title="Back to listings" onPress={backHandler} />
-              <Button title="Book now!" onPress={bookingHandler} />
+              <Button title="Back to listings" onPress={onShowEntertainers} />
+              <Button title="Book now!" onPress={onBookingForm} />
             </View>
           </View>
         </ScrollView>

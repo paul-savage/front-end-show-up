@@ -13,7 +13,7 @@ import { getBookings } from "../../utils/apicalls";
 import { reformatTime } from "../../utils/utils";
 import LoadingOverlay from "../LoadingOverlay";
 
-function BookingsEntertainer() {
+const BookingsEntertainer = () => {
   const { user, isLoggedIn, token } = useContext(GlobalContext);
 
   const [isLoading, setIsLoading] = useState(true);
@@ -80,7 +80,7 @@ function BookingsEntertainer() {
       </ScrollView>
     </>
   );
-}
+};
 
 export default BookingsEntertainer;
 

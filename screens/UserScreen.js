@@ -1,413 +1,82 @@
-import {
-  View,
-  Text,
-  TextInput,
-  Button,
-  StyleSheet,
-  ScrollView,
-} from "react-native";
-import { useContext } from "react";
-import { GlobalContext } from "../context/global-context";
-import { useEffect, useState } from "react";
-import { authenticateUser, me, registerUser } from "../utils/apicalls";
+import { useState } from "react";
+import { View, Text, StyleSheet } from "react-native";
+import UserLoggingIn from "../components/Users/UserLoggingIn";
+import UserLoggedIn from "../components/Users/UserLoggedIn";
+import UserCreateCustomer from "../components/Users/UserCreateCustomer";
+import UserCreateEntertainer from "../components/Users/UserCreateEntertainer";
 import LoadingOverlay from "../components/LoadingOverlay";
-import { GlobalStyles } from "../constants/styles";
 
-function UserScreen({ navigation }) {
-  const { user, setUser, isLoggedIn, setIsLoggedIn, token, setToken } =
-    useContext(GlobalContext);
-
+function UserScreen() {
   const [loginName, setLoginName] = useState("");
   const [password, setPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-  const [isInvalidUser, setIsInvalidUser] = useState(false);
-  const [isInvalidPassword, setIsInvalidPassword] = useState(false);
-  const [isFetchUsersError, setIsFetchUsersError] = useState(false);
-  // choice of screen:
-  // 0 - logging in
-  // 1 = logged in
-  // 2 - create client form
-  // 3 - create entertainer form
-  const [screen, setScreen] = useState(0);
   const [template, setTemplate] = useState({});
 
-  useEffect(() => {
-    setIsLoading(false);
-  }, []);
+  const US_LOGGING_IN = 0;
+  const US_LOGGED_IN = 1;
+  const US_CREATE_CUSTOMER = 2;
+  const US_CREATE_ENTERTAINER = 3;
+  const [userState, setUserState] = useState(US_LOGGING_IN);
 
-  const handleLogOut = () => {
-    setIsLoggedIn(false);
-    setUser({});
-    setScreen(0);
-    setToken("");
-  };
-
-  const handleChangeLoginName = (value) => {
-    setLoginName(value);
-    setIsInvalidUser(false);
-  };
-
-  const handleChangePassword = (value) => {
-    setPassword(value);
-    setIsInvalidPassword(false);
-  };
-
-  const handleLogIn = () => {
-    authenticateUser(loginName, password)
-      .then((res) => {
-        setToken(res.token);
-        return res.token;
-      })
-      .then((token) => {
-        me(token)
-          .then((response) => {
-            setLoginName("");
-            setPassword("");
-            setUser(response);
-            setIsLoggedIn(true);
-            setScreen(1);
-            //console.log("Log in Data----->>>>>", response);
-          })
-          .catch((err) => {
-            console.log(err);
-          });
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-  };
-
-  const handleCreateCustomer = () => {
-    setTemplate({
-      username: "",
-      password: "",
-      first_name: "",
-      last_name: "",
-      email: "",
-      user_type: "Client",
-    });
-    setScreen(2);
-  };
-
-  const handleCreateEntertainer = () => {
-    setTemplate({
-      username: "",
-      password: "",
-      first_name: "",
-      last_name: "",
-      email: "",
-      user_type: "Entertainer",
-      category: "",
-      location: "",
-      entertainer_name: "",
-      description: "",
-      price: 0,
-    });
-    setScreen(3);
-  };
-
-  const handleChangeClient = (prop, value) => {
-    setTemplate((current) => {
-      return { ...current, [prop]: value };
-    });
-  };
-
-  const handleChangeEntertainer = (prop, value) => {
-    if (prop === "price") {
-      value = +value;
-    }
-    setTemplate((current) => {
-      return { ...current, [prop]: value };
-    });
-  };
-
-  const handleClientCreation = () => {
-    registerUser(template)
-      .then((response) => {
-        setUser(response);
-      })
-      .then(() => {
-        authenticateUser(template.username, template.password)
-          .then((res) => {
-            setToken(res.token);
-            setIsLoggedIn(true);
-            setScreen(1);
-          })
-          .catch((err) => {
-            console.log(err);
-          });
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-  };
-
-  const handleCancelClientCreation = () => {
-    setScreen(0);
-  };
-
-  const handleEntertainerCreation = () => {
-    registerUser(template)
-      .then((response) => {
-        setUser(response);
-      })
-      .then(() => {
-        authenticateUser(template.username, template.password)
-          .then((res) => {
-            setToken(res.token);
-            setIsLoggedIn(true);
-            setScreen(1);
-          })
-          .catch((err) => {
-            console.log(err);
-          });
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-  };
-
-  const handleCancelEntertainerCreation = () => {
-    setScreen(0);
-  };
-
-  //   if (isFetchUsersError) {
-  //     return (
-  //       <View style={styles.rootContainer}>
-  //         <Text>Error fetching user names</Text>
-  //       </View>
-  //     );
-  //   }
+  function updateUserState(value) {
+    setUserState(value);
+  }
 
   if (isLoading) {
     return <LoadingOverlay />;
   }
 
-  if (screen === 0) {
-    return (
-      <ScrollView style={styles.scrollItem}>
+  switch (userState) {
+    case US_LOGGING_IN:
+      return (
+        <UserLoggingIn
+          loginName={loginName}
+          setLoginName={setLoginName}
+          password={password}
+          setPassword={setPassword}
+          setTemplate={setTemplate}
+          gotoLoggedIn={updateUserState.bind(this, US_LOGGED_IN)}
+          gotoCreateCustomer={updateUserState.bind(this, US_CREATE_CUSTOMER)}
+          gotoCreateEntertainer={updateUserState.bind(
+            this,
+            US_CREATE_ENTERTAINER
+          )}
+        />
+      );
+    case US_LOGGED_IN:
+      return (
+        <UserLoggedIn
+          gotoLoggingIn={updateUserState.bind(this, US_LOGGING_IN)}
+        />
+      );
+    case US_CREATE_CUSTOMER:
+      return (
+        <UserCreateCustomer
+          template={template}
+          setTemplate={setTemplate}
+          gotoLoggedIn={updateUserState.bind(this, US_LOGGED_IN)}
+          gotoLoggingIn={updateUserState.bind(this, US_LOGGING_IN)}
+        />
+      );
+    case US_CREATE_ENTERTAINER:
+      return (
+        <UserCreateEntertainer
+          template={template}
+          setTemplate={setTemplate}
+          gotoLoggedIn={updateUserState.bind(this, US_LOGGED_IN)}
+          gotoLoggingIn={updateUserState.bind(this, US_LOGGING_IN)}
+        />
+      );
+    default:
+      return (
         <View style={styles.rootContainer}>
-          <View style={styles.inputContainer}>
-            <Text style={styles.label}>Enter user name:</Text>
-            <TextInput
-              style={styles.input}
-              value={loginName}
-              autoCapitalize="none"
-              autoCorrect={false}
-              onChangeText={handleChangeLoginName}
-            />
-            {isInvalidUser ? (
-              <Text style={styles.invalidInput}>Invalid user name</Text>
-            ) : null}
-            <Text style={styles.label}>Enter password:</Text>
-            <TextInput
-              style={styles.input}
-              value={password}
-              autoCapitalize="none"
-              autoCorrect={false}
-              secureTextEntry={true}
-              onChangeText={handleChangePassword}
-            />
-            {isInvalidPassword ? (
-              <Text style={styles.invalidInput}>Invalid password</Text>
-            ) : null}
-            <View style={styles.buttonWrapper}>
-              <Button title="Log In" onPress={handleLogIn} />
-            </View>
-            <Text style={styles.bigOR}>OR</Text>
-            <Text style={styles.label}>Create a profile</Text>
-            <View style={styles.buttonContainer}>
-              <View style={styles.buttonWrapper}></View>
-              <Button title="Customer" onPress={handleCreateCustomer} />
-              <Button title="Entertainer" onPress={handleCreateEntertainer} />
-            </View>
-          </View>
-        </View>
-      </ScrollView>
-    );
-  }
-
-  if (screen === 1) {
-    return (
-      <View style={styles.rootContainer}>
-        <View style={styles.inputContainer}>
-          <Text style={styles.label}>
-            Logged in as: {user.first_name} {user.last_name}
+          <Text>
+            Error:{" "}
+            <Text style={styles.highlight}>'userState' = '{userState}'</Text>{" "}
+            unknown!
           </Text>
-          <View style={styles.buttonWrapper}>
-            <Button title="Log Out" onPress={handleLogOut} />
-          </View>
         </View>
-      </View>
-    );
-  }
-
-  if (screen === 2) {
-    return (
-      <ScrollView style={styles.scrollItem}>
-        <View style={styles.rootContainer}>
-          <View style={styles.inputContainer}>
-            <Text style={styles.label}>Enter user name:</Text>
-            <TextInput
-              style={styles.input}
-              value={template.username}
-              autoCapitalize="none"
-              autoCorrect={false}
-              onChangeText={handleChangeClient.bind(this, "username")}
-            />
-            <Text style={styles.label}>Enter password:</Text>
-            <TextInput
-              style={styles.input}
-              value={template.password}
-              autoCapitalize="none"
-              autoCorrect={false}
-              //secureTextEntry={true}
-              onChangeText={handleChangeClient.bind(this, "password")}
-            />
-            <Text style={styles.label}>Enter first name:</Text>
-            <TextInput
-              style={styles.input}
-              value={template.first_name}
-              autoCapitalize="none"
-              autoCorrect={false}
-              onChangeText={handleChangeClient.bind(this, "first_name")}
-            />
-            <Text style={styles.label}>Enter last name:</Text>
-            <TextInput
-              style={styles.input}
-              value={template.last_name}
-              autoCapitalize="none"
-              autoCorrect={false}
-              onChangeText={handleChangeClient.bind(this, "last_name")}
-            />
-            <Text style={styles.label}>Enter email address:</Text>
-            <TextInput
-              style={styles.input}
-              value={template.email}
-              autoCapitalize="none"
-              autoCorrect={false}
-              onChangeText={handleChangeClient.bind(this, "email")}
-            />
-            <View style={styles.buttonWrapper}>
-              <Button title="Create Account" onPress={handleClientCreation} />
-            </View>
-            <View style={styles.buttonWrapper}>
-              <Button title="Cancel" onPress={handleCancelClientCreation} />
-            </View>
-          </View>
-        </View>
-      </ScrollView>
-    );
-  }
-
-  if (screen === 3) {
-    return (
-      <ScrollView style={styles.scrollItem}>
-        <View style={styles.rootContainer}>
-          <View style={styles.inputContainer}>
-            <Text style={styles.label}>Enter user name:</Text>
-            <TextInput
-              style={styles.input}
-              value={template.username}
-              autoCapitalize="none"
-              autoCorrect={false}
-              onChangeText={handleChangeEntertainer.bind(this, "username")}
-            />
-            <Text style={styles.label}>Enter password:</Text>
-            <TextInput
-              style={styles.input}
-              value={template.password}
-              autoCapitalize="none"
-              autoCorrect={false}
-              //secureTextEntry={true}
-              onChangeText={handleChangeEntertainer.bind(this, "password")}
-            />
-            <Text style={styles.label}>Enter first name:</Text>
-            <TextInput
-              style={styles.input}
-              value={template.first_name}
-              autoCapitalize="none"
-              autoCorrect={false}
-              onChangeText={handleChangeEntertainer.bind(this, "first_name")}
-            />
-            <Text style={styles.label}>Enter last name:</Text>
-            <TextInput
-              style={styles.input}
-              value={template.last_name}
-              autoCapitalize="none"
-              autoCorrect={false}
-              onChangeText={handleChangeEntertainer.bind(this, "last_name")}
-            />
-            <Text style={styles.label}>Enter email address:</Text>
-            <TextInput
-              style={styles.input}
-              value={template.email}
-              autoCapitalize="none"
-              autoCorrect={false}
-              onChangeText={handleChangeEntertainer.bind(this, "email")}
-            />
-            <Text style={styles.label}>Enter category:</Text>
-            <TextInput
-              style={styles.input}
-              value={template.category}
-              autoCapitalize="none"
-              autoCorrect={false}
-              onChangeText={handleChangeEntertainer.bind(this, "category")}
-            />
-            <Text style={styles.label}>Enter location:</Text>
-            <TextInput
-              style={styles.input}
-              value={template.location}
-              autoCapitalize="none"
-              autoCorrect={false}
-              onChangeText={handleChangeEntertainer.bind(this, "location")}
-            />
-            <Text style={styles.label}>Enter entertainer name:</Text>
-            <TextInput
-              style={styles.input}
-              value={template.entertainer_name}
-              autoCapitalize="none"
-              autoCorrect={false}
-              onChangeText={handleChangeEntertainer.bind(
-                this,
-                "entertainer_name"
-              )}
-            />
-            <Text style={styles.label}>Enter description:</Text>
-            <TextInput
-              style={[styles.input, styles.inputMultiLine]}
-              value={template.description}
-              autoCapitalize="none"
-              autoCorrect={false}
-              multiline={true}
-              numberOfLines={3}
-              onChangeText={handleChangeEntertainer.bind(this, "description")}
-            />
-            <Text style={styles.label}>Enter price:</Text>
-            <TextInput
-              style={styles.input}
-              value={template.price}
-              autoCapitalize="none"
-              autoCorrect={false}
-              keyboardType="number-pad"
-              onChangeText={handleChangeEntertainer.bind(this, "price")}
-            />
-            <View style={styles.buttonWrapper}>
-              <Button
-                title="Create Account"
-                onPress={handleEntertainerCreation}
-              />
-            </View>
-            <View style={styles.buttonWrapper}>
-              <Button
-                title="Cancel"
-                onPress={handleCancelEntertainerCreation}
-              />
-            </View>
-          </View>
-        </View>
-      </ScrollView>
-    );
+      );
   }
 }
 
@@ -420,49 +89,8 @@ const styles = StyleSheet.create({
     alignItems: "center",
     marginTop: 100,
   },
-  scrollItem: {
-    //flex: 1,
-  },
-  inputContainer: {
-    marginHorizontal: 4,
-    marginVertical: 8,
-    width: "80%",
-  },
-  buttonContainer: {
-    flexDirection: "row",
-    marginTop: 20,
-    justifyContent: "space-evenly",
-  },
-  buttonWrapper: {
-    marginVertical: 8,
-  },
-  label: {
-    fontSize: 18,
-    color: GlobalStyles.colors.primary100,
-    color: "black",
-    marginBottom: 4,
-    textAlign: "center",
-  },
-  input: {
-    backgroundColor: GlobalStyles.colors.primary100,
-    color: GlobalStyles.colors.primary700,
-    padding: 6,
-    borderRadius: 6,
-    fontSize: 18,
-  },
-  inputMultiLine: {
-    minHeight: 100,
-    textAlignVertical: "top",
-  },
-  invalidLabel: {
-    color: GlobalStyles.colors.error500,
-  },
-  invalidInput: {
-    backgroundColor: GlobalStyles.colors.error50,
-  },
-  bigOR: {
-    fontSize: 32,
-    marginVertical: 24,
-    textAlign: "center",
+  highlight: {
+    fontWeight: "bold",
+    color: "#eb1064",
   },
 });

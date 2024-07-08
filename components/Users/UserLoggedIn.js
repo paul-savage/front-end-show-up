@@ -1,17 +1,34 @@
-import React, { useContext } from 'react';
+import React, { useState, useContext, useEffect } from 'react';
 import {
   View,
   Text,
   Image,
+  TextInput,
   TouchableOpacity,
   StyleSheet,
   SafeAreaView,
   ScrollView,
 } from 'react-native';
+import { Picker } from '@react-native-picker/picker';
 import { GlobalContext } from '../../context/global-context';
+import { getCategories, getLocations } from '../../utils/apicalls';
 
 const UserLoggedIn = ({ gotoLoggingIn }) => {
   const { user, setUser, setToken, setIsLoggedIn } = useContext(GlobalContext);
+  const [editMode, setEditMode] = useState(false);
+  const [categories, setCategories] = useState([]);
+  const [locations, setLocations] = useState([]);
+  const [editedUser, setEditedUser] = useState({
+    category: user.category,
+    location: user.location,
+    description: user.description,
+    price: user.price,
+  });
+
+  useEffect(() => {
+    getCategories().then((data) => setCategories(data));
+    getLocations().then((data) => setLocations(data));
+  }, []);
 
   const handleLogOut = () => {
     setIsLoggedIn(false);
@@ -21,7 +38,18 @@ const UserLoggedIn = ({ gotoLoggingIn }) => {
   };
 
   const handleEditProfile = () => {
-    // Handle edit profile logic here
+    setEditMode(!editMode);
+  };
+
+  const handleSaveProfile = () => {
+    // Save profile logic here
+    // Assume updateUser API call is used to update the user profile
+    setUser({ ...user, ...editedUser });
+    setEditMode(false);
+  };
+
+  const handleChange = (key, value) => {
+    setEditedUser({ ...editedUser, [key]: value });
   };
 
   return (
@@ -41,16 +69,67 @@ const UserLoggedIn = ({ gotoLoggingIn }) => {
               <Text style={styles.label}>User Type: {user.user_type}</Text>
               {user.user_type === 'Entertainer' && (
                 <>
-                  <Text style={styles.label}>Category: {user.category}</Text>
-                  <Text style={styles.label}>Location: {user.location}</Text>
-                  <Text style={styles.label}>Description: {user.description}</Text>
-                  <Text style={styles.label}>Price: ${user.price}</Text>
+                  <Text style={styles.label}>Category:</Text>
+                  {editMode ? (
+                    <Picker
+                      selectedValue={editedUser.category}
+                      style={styles.picker}
+                      onValueChange={(value) => handleChange('category', value)}
+                    >
+                      {categories.map((category) => (
+                        <Picker.Item key={category.category} label={category.category} value={category.category} />
+                      ))}
+                    </Picker>
+                  ) : (
+                    <Text style={styles.value}>{user.category}</Text>
+                  )}
+                  <Text style={styles.label}>Location:</Text>
+                  {editMode ? (
+                    <Picker
+                      selectedValue={editedUser.location}
+                      style={styles.picker}
+                      onValueChange={(value) => handleChange('location', value)}
+                    >
+                      {locations.map((location) => (
+                        <Picker.Item key={location.location} label={location.location} value={location.location} />
+                      ))}
+                    </Picker>
+                  ) : (
+                    <Text style={styles.value}>{user.location}</Text>
+                  )}
+                  <Text style={styles.label}>Description:</Text>
+                  {editMode ? (
+                    <TextInput
+                      style={styles.input}
+                      value={editedUser.description}
+                      onChangeText={(value) => handleChange('description', value)}
+                    />
+                  ) : (
+                    <Text style={styles.value}>{user.description}</Text>
+                  )}
+                  <Text style={styles.label}>Price:</Text>
+                  {editMode ? (
+                    <TextInput
+                      style={styles.input}
+                      value={String(editedUser.price)}
+                      keyboardType="numeric"
+                      onChangeText={(value) => handleChange('price', value)}
+                    />
+                  ) : (
+                    <Text style={styles.value}>£{user.price}</Text>
+                  )}
                 </>
               )}
             </View>
-            <TouchableOpacity style={styles.button} onPress={handleEditProfile}>
-              <Text style={styles.buttonText}>Edit Profile</Text>
-            </TouchableOpacity>
+            {editMode ? (
+              <TouchableOpacity style={styles.button} onPress={handleSaveProfile}>
+                <Text style={styles.buttonText}>Save Profile</Text>
+              </TouchableOpacity>
+            ) : (
+              <TouchableOpacity style={styles.button} onPress={handleEditProfile}>
+                <Text style={styles.buttonText}>Edit Profile</Text>
+              </TouchableOpacity>
+            )}
           </View>
         </View>
         <TouchableOpacity style={[styles.button, styles.logoutButton]} onPress={handleLogOut}>
@@ -114,6 +193,25 @@ const styles = StyleSheet.create({
     marginVertical: 4,
     textAlign: 'left',
     width: '100%',
+  },
+  value: {
+    fontSize: 16,
+    color: '#000',
+    marginVertical: 4,
+    textAlign: 'left',
+    width: '100%',
+  },
+  input: {
+    width: '100%',
+    padding: 10,
+    borderRadius: 8,
+    borderWidth: 1,
+    borderColor: '#ccc',
+    marginBottom: 12,
+  },
+  picker: {
+    width: '100%',
+    marginBottom: 12,
   },
   button: {
     backgroundColor: 'darkslateblue',

@@ -53,13 +53,13 @@ const ListEntertainers = ({
     setSearchParams(query);
   };
 
-  if (entertainers.length === 0) {
-    return (
-      <View style={styles.rootContainer}>
-        <Text>No entertainers available</Text>
-      </View>
-    );
-  }
+  // if (entertainers.length === 0) {
+  //   return (
+  //     <View style={styles.rootContainer}>
+  //       <Text>No entertainers available</Text>
+  //     </View>
+  //   );
+  // }
 
   return (
     <>
@@ -114,6 +114,10 @@ const ListEntertainers = ({
           <View style={styles.buttonContainer}>
             <Button title="Search" color="#3e04c3" onPress={handleSearch} />
           </View>
+
+          {entertainers.length === 0 ? (
+            <Text style={styles.labelNone}>No entertainers available</Text>
+          ) : null}
 
           {entertainers.map((item) => (
             <View key={item.user_id} style={styles.imageContainer}>
@@ -176,6 +180,11 @@ const styles = StyleSheet.create({
   dName: {
     textAlign: "center",
     marginTop: 6,
+  },
+  labelNone: {
+    fontSize: 24,
+    textAlign: "center",
+    color: "red",
   },
   buttonContainer: {
     marginTop: 10,

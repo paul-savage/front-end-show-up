@@ -80,8 +80,7 @@ const BookingForm = ({ entertainer, onShowEntertainers }) => {
     }
     
     return Promise.all([postAvailability(availabilityObject), postBooking(token, bookingTemplate)]).then((response) => {
-      console.log(response[0])
-      console.log(response[1])
+      
     }).catch((err) => {
       console.log(err)
     })

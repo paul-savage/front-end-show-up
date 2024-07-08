@@ -6,7 +6,7 @@ import {
   StyleSheet,
   ScrollView,
 } from "react-native";
-import { useContext } from "react";
+import { useState, useContext } from "react";
 import { GlobalContext } from "../../context/global-context";
 import { GlobalStyles } from "../../constants/styles";
 import { authenticateUser, me } from "../../utils/apicalls";
@@ -23,15 +23,20 @@ const UserLoggingIn = ({
 }) => {
   const { setUser, setIsLoggedIn, setToken } = useContext(GlobalContext);
 
+  const [error, setError] = useState(null);
+
   const handleChangeLoginName = (value) => {
+    setError(null);
     setLoginName(value);
   };
 
   const handleChangePassword = (value) => {
+    setError(null);
     setPassword(value);
   };
 
   const handleLogIn = () => {
+    setError(null);
     authenticateUser(loginName, password)
       .then((res) => {
         setToken(res.token);
@@ -48,15 +53,18 @@ const UserLoggingIn = ({
             gotoLoggedIn();
           })
           .catch((err) => {
+            setError("Invalid username or password");
             console.log(err);
           });
       })
       .catch((err) => {
+        setError("Invalid username or password");
         console.log(err);
       });
   };
 
   const handleCreateCustomer = () => {
+    setError(null);
     setTemplate({
       username: "",
       password: "",
@@ -69,6 +77,7 @@ const UserLoggingIn = ({
   };
 
   const handleCreateEntertainer = () => {
+    setError(null);
     setTemplate({
       username: "",
       password: "",
@@ -106,6 +115,11 @@ const UserLoggingIn = ({
             secureTextEntry={true}
             onChangeText={handleChangePassword}
           />
+          {error ? (
+            <View style={styles.errorContainer}>
+              <Text style={styles.errorText}>{error}</Text>
+            </View>
+          ) : null}
           <View style={styles.buttonWrapper}>
             <Button title="Log In" onPress={handleLogIn} />
           </View>
@@ -162,5 +176,16 @@ const styles = StyleSheet.create({
     fontSize: 32,
     marginVertical: 24,
     textAlign: "center",
+  },
+  errorContainer: {
+    marginVertical: 12,
+    backgroundColor: "#dd8888",
+    borderRadius: 10,
+  },
+  errorText: {
+    fontSize: 20,
+    textAlign: "center",
+    color: "white",
+    padding: 6,
   },
 });

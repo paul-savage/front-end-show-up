@@ -21,6 +21,7 @@ function MessageScreen() {
 
   const fetchCurrentUser = useCallback(() => {
     me(token).then((user) => {
+      console.log("Fetched current user:", user); // Debugging log
       setCurrentUser(user);
     });
   }, [token]);
@@ -29,6 +30,7 @@ function MessageScreen() {
     setRefreshing(true);
     conversations(token)
       .then((response) => {
+        console.log("Fetched conversations:", response); // Debugging log
         if (currentUser) {
           const filteredData = response.filter(
             (item) => item.username !== currentUser.username

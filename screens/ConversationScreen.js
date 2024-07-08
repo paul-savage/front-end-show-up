@@ -17,7 +17,7 @@ import {
   Platform,
 } from "react-native";
 import { GlobalContext } from "../context/global-context";
-import { getConversation, sendMessage } from "../utils/apicalls";
+import { getConversation, me, sendMessage } from "../utils/apicalls";
 
 function ConversationScreen({ route, navigation }) {
   const { token } = useContext(GlobalContext);
@@ -26,13 +26,22 @@ function ConversationScreen({ route, navigation }) {
   const [refreshing, setRefreshing] = useState(false);
   const [message, setMessage] = useState("");
   const [recipientId, setRecipientId] = useState(null);
+  const [currentUser, setCurrentUser] = useState(null);
 
   const flatListRef = useRef(null);
+
+  const fetchCurrentUser = useCallback(() => {
+    me(token).then((user) => {
+      console.log("Fetched current user:", user); // Debugging log
+      setCurrentUser(user);
+    });
+  }, [token]);
 
   const fetchConversation = useCallback(() => {
     setRefreshing(true);
     getConversation(token, username)
       .then((conversation) => {
+        console.log("Fetched conversation:", conversation); // Debugging log
         setData((prevData) => {
           const newMessages = conversation.filter(
             (newMsg) =>
@@ -40,12 +49,13 @@ function ConversationScreen({ route, navigation }) {
                 (prevMsg) => prevMsg.message_id === newMsg.message_id
               )
           );
-          return [...prevData, ...newMessages];
+          const mergedData = [...prevData, ...newMessages];
+          return mergedData;
         });
         if (conversation.length > 0) {
           const message = conversation[0];
           const recipientId =
-            message.sender_username !== username
+            message.sender_username !== currentUser.username
               ? message.sender_id
               : message.recipient_id;
           setRecipientId(recipientId);
@@ -57,13 +67,19 @@ function ConversationScreen({ route, navigation }) {
           flatListRef.current.scrollToEnd({ animated: true });
         }
       });
-  }, [token, username]);
+  }, [token, username, currentUser]);
 
   useEffect(() => {
-    fetchConversation();
-    const interval = setInterval(fetchConversation, 10000); // Poll every 10 seconds
-    return () => clearInterval(interval);
-  }, [fetchConversation]);
+    fetchCurrentUser();
+  }, [fetchCurrentUser]);
+
+  useEffect(() => {
+    if (currentUser) {
+      fetchConversation();
+      const interval = setInterval(fetchConversation, 10000); // Poll every 10 seconds
+      return () => clearInterval(interval);
+    }
+  }, [fetchConversation, currentUser]);
 
   useEffect(() => {
     if (data.length > 0 && flatListRef.current) {
@@ -73,16 +89,26 @@ function ConversationScreen({ route, navigation }) {
 
   const handleSendMessage = () => {
     if (recipientId) {
+      const newMessage = {
+        message_id: Date.now(),
+        sender_username: currentUser.username,
+        message,
+        created_at: new Date().toISOString(),
+      };
+      console.log("Sending message:", newMessage); // Debugging log
+      setData((prevData) => [...prevData, newMessage]);
+      setMessage("");
       sendMessage(token, recipientId, message)
-        .then((newMessage) => {
-          setData((prevData) => [...prevData, newMessage]);
-          setMessage("");
+        .then((sentMessage) => {
+          console.log("Message sent:", sentMessage); // Debugging log
+          // Optional: Replace the temporary message with the confirmed one
+          setData((prevData) => prevData.map(msg => msg.message_id === newMessage.message_id ? sentMessage : msg));
           if (flatListRef.current) {
             flatListRef.current.scrollToEnd({ animated: true });
           }
         })
         .catch((error) => {
-          console.error(error);
+          console.error("Error sending message:", error); // Debugging log
         });
     }
   };
@@ -90,9 +116,9 @@ function ConversationScreen({ route, navigation }) {
   const renderItem = ({ item }) => (
     <View
       style={
-        item.sender_username === username
-          ? styles.messageLeft
-          : styles.messageRight
+        item.sender_username === currentUser.username
+          ? styles.messageRight
+          : styles.messageLeft
       }
     >
       <Text style={styles.messageText}>{item.message}</Text>

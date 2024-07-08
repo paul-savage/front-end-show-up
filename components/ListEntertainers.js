@@ -1,3 +1,4 @@
+import React, { useEffect, useState } from 'react';
 import {
   View,
   Text,
@@ -5,9 +6,12 @@ import {
   Image,
   StyleSheet,
   ScrollView,
-} from "react-native";
-import { Picker } from "@react-native-picker/picker";
-import { useEffect, useState } from "react";
+  TouchableOpacity,
+  Modal,
+  TouchableWithoutFeedback,
+  SafeAreaView,
+} from 'react-native';
+import { Picker } from '@react-native-picker/picker';
 
 const ListEntertainers = ({
   entertainers,
@@ -18,9 +22,9 @@ const ListEntertainers = ({
   categories,
   onShowDetails,
 }) => {
-  const [location, setLocation] = useState("All");
-  const [category, setCategory] = useState("All");
-  const [date, setDate] = useState(null);
+  const [location, setLocation] = useState('All');
+  const [category, setCategory] = useState('All');
+  const [modalVisible, setModalVisible] = useState(false);
 
   useEffect(() => {
     const currentCategory = searchParams.category;
@@ -42,7 +46,7 @@ const ListEntertainers = ({
     onShowDetails();
   };
 
-  const handleSearch = (item) => {
+  const handleSearch = () => {
     const query = {};
     if (location !== locations[0]) {
       query.location = location;
@@ -51,163 +55,108 @@ const ListEntertainers = ({
       query.category = category;
     }
     setSearchParams(query);
+    setModalVisible(false);
   };
 
-  // if (entertainers.length === 0) {
-  //   return (
-  //     <View style={styles.rootContainer}>
-  //       <Text>No entertainers available</Text>
-  //     </View>
-  //   );
-  // }
-
   return (
-    <>
+    <SafeAreaView style={styles.safeArea}>
       <ScrollView>
         <View style={styles.rootContainer}>
-          <View style={styles.outerPickerContainer}>
-            <View>
-              <Text style={styles.text}>Select location:</Text>
-              <View style={styles.pickerContainer}>
-                <Picker
-                  style={styles.pickerItem}
-                  selectedValue={location}
-                  onValueChange={(itemValue, itemIndex) => {
-                    setLocation(itemValue);
-                  }}
-                >
-                  {locations.map((location) => {
-                    return (
-                      <Picker.Item
-                        key={location}
-                        label={location}
-                        value={location}
-                      />
-                    );
-                  })}
-                </Picker>
-              </View>
-            </View>
-            <View>
-              <Text style={styles.text}>Select category:</Text>
-              <View style={styles.pickerContainer}>
-                <Picker
-                  style={styles.pickerItem}
-                  selectedValue={category}
-                  onValueChange={(itemValue, itemIndex) => {
-                    setCategory(itemValue);
-                  }}
-                >
-                  {categories.map((category) => {
-                    return (
-                      <Picker.Item
-                        key={category}
-                        label={category}
-                        value={category}
-                      />
-                    );
-                  })}
-                </Picker>
-              </View>
-            </View>
-          </View>
-          <View style={styles.buttonContainer}>
-            <Button title="Search" color="#3e04c3" onPress={handleSearch} />
-          </View>
+          <TouchableOpacity style={styles.filterButton} onPress={() => setModalVisible(true)}>
+            <Text style={styles.filterButtonText}>Search Entertainers</Text>
+          </TouchableOpacity>
 
           {entertainers.length === 0 ? (
             <Text style={styles.labelNone}>No entertainers available</Text>
-          ) : null}
+          ) : (
+            entertainers.map((item) => (
+              <View key={item.user_id} style={styles.card}>
+                <Image style={styles.image} source={{ uri: item.profile_img_url }} />
+                <Text style={styles.eName}>{item.entertainer_name}</Text>
+                <Text style={styles.dName}>Location: {item.location}</Text>
+                <Text style={styles.dName}>Category: {item.category}</Text>
+                <View style={styles.buttonContainer}>
+                  <Button title="Show details" onPress={() => handleShowDetails(item)} />
+                </View>
+              </View>
+            ))
+          )}
 
-          {entertainers.map((item) => (
-            <View key={item.user_id} style={styles.imageContainer}>
-              <Image
-                style={styles.image}
-                source={{ uri: item.profile_img_url }}
-              />
-              <Text style={styles.eName}>{item.entertainer_name}</Text>
-              <Text style={styles.dName}>Location: {item.location}</Text>
-              <Text style={styles.dName}>Category: {item.category}</Text>
-              <Text style={styles.dName}>Price: {item.price}</Text>
-              <Text style={styles.dName}>{item.description}</Text>
-              <View style={styles.buttonContainer}>
-                <Button
-                  title="Show details"
-                  onPress={handleShowDetails.bind(this, item)}
-                />
+          <Modal
+            animationType="slide"
+            transparent={true}
+            visible={modalVisible}
+            onRequestClose={() => setModalVisible(false)}
+          >
+            <TouchableWithoutFeedback onPress={() => setModalVisible(false)}>
+              <View style={styles.modalOverlay} />
+            </TouchableWithoutFeedback>
+            <View style={styles.modalContent}>
+              <Text style={styles.text}>Select location:</Text>
+              <View style={styles.pickerWrapper}>
+                <Picker
+                  style={styles.pickerItem}
+                  itemStyle={{height:50}}
+                  selectedValue={location}
+                  onValueChange={(itemValue) => setLocation(itemValue)}
+                >
+                  {locations.map((location) => (
+                    <Picker.Item key={location} label={location} value={location} />
+                  ))}
+                </Picker>
+              </View>
+              <Text style={styles.text}>Select category:</Text>
+              <View style={styles.pickerWrapper}>
+                <Picker
+                  style={styles.pickerItem}
+                  itemStyle={{height:50}}
+                  selectedValue={category}
+                  onValueChange={(itemValue) => setCategory(itemValue)}
+                >
+                  {categories.map((category) => (
+                    <Picker.Item key={category} label={category} value={category} />
+                  ))}
+                </Picker>
+              </View>
+              <View style={styles.modalButtonContainer}>
+                <Button title="Search" color="#3e04c3" onPress={handleSearch} />
               </View>
             </View>
-          ))}
+          </Modal>
         </View>
       </ScrollView>
-    </>
+    </SafeAreaView>
   );
 };
 
 export default ListEntertainers;
 
 const styles = StyleSheet.create({
+  safeArea: {
+    flex: 1,
+    backgroundColor: '#f8f8f8',
+  },
   rootContainer: {
-    marginHorizontal: 16,
-    marginTop: 60,
-    marginBottom: 32,
-  },
-  outerPickerContainer: {
-    flexDirection: "row",
-    justifyContent: "space-around",
-    alignContent: "center,",
-  },
-  pickerContainer: {
-    borderWidth: 2,
-    borderColor: "lightgrey",
-    borderRadius: 8,
-    marginTop: 8,
-    backgroundColor: "#ffffff"
-  },
-  pickerItem: {},
-  radio: {
-    marginVertical: 10,
-  },
-  text: {
-    fontSize: 24,
-    textAlign: "center",
-    color: "#333",
-  },
-  eName: {
-    fontSize: 16,
-    fontWeight: "bold",
-    textAlign: "center",
-    marginTop: 8,
-  },
-  dName: {
-    textAlign: "center",
-    marginTop: 6,
-    color: "#555",
-  },
-  labelNone: {
-    fontSize: 18,
-    textAlign: "center",
-    color: "red",
-    marginTop: 20,
-  },
-  buttonContainer: {
-    marginTop: 10,
-    marginBottom: 12,
-    paddingHorizontal: 20,
-  },
-  image: {
-    width: "100%",
-    height: 250,
-    borderRadius: 12,
-    marginBottom: 8,
-  },
-  imageContainer: {
-    borderRadius: 12,
-    overflow: "hidden",
-    backgroundColor: "#f8e0f0",
-    marginTop: 16,
     padding: 16,
-    shadowColor: "#000",
+  },
+  filterButton: {
+    backgroundColor: 'darkslateblue',
+    padding: 10,
+    borderRadius: 8,
+    marginBottom: 20,
+    alignItems: 'center',
+  },
+  filterButtonText: {
+    color: '#fff',
+    fontWeight: 'bold',
+    fontSize: 16,
+  },
+  card: {
+    backgroundColor: '#ffffff',
+    borderRadius: 12,
+    padding: 16,
+    marginVertical: 8,
+    shadowColor: '#000',
     shadowOffset: {
       width: 0,
       height: 2,
@@ -215,5 +164,59 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.25,
     shadowRadius: 3.84,
     elevation: 5,
+  },
+  image: {
+    width: '100%',
+    height: 200,
+    borderRadius: 12,
+    marginBottom: 8,
+  },
+  eName: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    textAlign: 'center',
+    marginVertical: 4,
+  },
+  dName: {
+    textAlign: 'center',
+    color: '#555',
+    marginVertical: 4,
+  },
+  labelNone: {
+    fontSize: 18,
+    textAlign: 'center',
+    color: 'red',
+    marginTop: 20,
+  },
+  buttonContainer: {
+    marginTop: 10,
+  },
+  modalOverlay: {
+    flex: 1,
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+  },
+  modalContent: {
+    backgroundColor: 'white',
+    padding: 20,
+    borderRadius: 12,
+    marginHorizontal: 20,
+    marginVertical: 100,
+    justifyContent: 'center',
+  },
+  pickerWrapper: {
+    borderWidth: 1,
+    borderColor: '#ddd',
+    borderRadius: 8,
+    marginVertical: 10,
+  },
+  pickerItem: {
+    height: 50,
+  },
+  text: {
+    fontSize: 16,
+    marginBottom: 10,
+  },
+  modalButtonContainer: {
+    marginTop: 20,
   },
 });

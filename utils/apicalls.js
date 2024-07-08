@@ -105,7 +105,7 @@ export const checkUsername = (username) => {
   if (TESTING) {
     return Promise.resolve({ usernameTaken: false });
   }
-  return showUp.get(`/check-username/${username}`).then((response) => {
+  return showUp.get("/check-username/${username}").then((response) => {
     return response;
   });
 };
@@ -272,6 +272,7 @@ export const getBookings = () => {
   });
 };
 
+
 export const getCustomerBookings = (token, id) => {
   const headers = { headers: { Authorization: `${token}` } };
   return showUp.get(`/customer-bookings/${id}`, headers).then((response) => {
@@ -296,3 +297,4 @@ export const confirmBooking = (id) => {
     return response.data.booking
   })
 }
+

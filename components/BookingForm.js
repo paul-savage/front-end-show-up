@@ -67,7 +67,6 @@ const BookingForm = ({ entertainer, onShowEntertainers }) => {
   };
 
   const handleChange = (prop, value) => {
-    console.log({entertainer_id: bookingTemplate})
     setBookingTemplate((current) => {
       return { ...current, [prop]: value };
     });
@@ -75,7 +74,7 @@ const BookingForm = ({ entertainer, onShowEntertainers }) => {
 
   const handleConfirmBooking = () => {
     const availabilityObject = {
-      entertainer_id: entertainer.entertainer_id,
+      entertainer_id: entertainer.user_id,
       date: bookingTemplate.event_date,
       available: false
     }

@@ -1,4 +1,10 @@
-import React, { useContext, useEffect, useState, useCallback } from "react";
+import React, {
+  useContext,
+  useEffect,
+  useState,
+  useCallback,
+  useRef,
+} from "react";
 import {
   View,
   FlatList,
@@ -21,6 +27,8 @@ function ConversationScreen({ route, navigation }) {
   const [message, setMessage] = useState("");
   const [recipientId, setRecipientId] = useState(null);
 
+  const flatListRef = useRef(null);
+
   const fetchConversation = useCallback(() => {
     setRefreshing(true);
     getConversation(token, username)
@@ -35,21 +43,35 @@ function ConversationScreen({ route, navigation }) {
           setRecipientId(recipientId);
         }
       })
-      .finally(() => setRefreshing(false));
+      .finally(() => {
+        setRefreshing(false);
+        if (flatListRef.current) {
+          flatListRef.current.scrollToEnd({ animated: true });
+        }
+      });
   }, [token, username]);
 
   useEffect(() => {
     fetchConversation();
     const interval = setInterval(fetchConversation, 10000); // Poll every 10 seconds
-    return () => clearInterval(interval); // Cleanup interval on unmount
+    return () => clearInterval(interval);
   }, [fetchConversation]);
+
+  useEffect(() => {
+    if (data.length > 0 && flatListRef.current) {
+      flatListRef.current.scrollToEnd({ animated: true });
+    }
+  }, [data]);
 
   const handleSendMessage = () => {
     if (recipientId) {
       sendMessage(token, recipientId, message)
         .then((newMessage) => {
-          setData((prevData) => [...prevData, newMessage]); // Add new message at the end
+          setData((prevData) => [...prevData, newMessage]);
           setMessage("");
+          if (flatListRef.current) {
+            flatListRef.current.scrollToEnd({ animated: true });
+          }
         })
         .catch((error) => {
           console.error(error);
@@ -67,7 +89,10 @@ function ConversationScreen({ route, navigation }) {
     >
       <Text style={styles.messageText}>{item.message}</Text>
       <Text style={styles.messageTime}>
-        {new Date(item.created_at).toLocaleTimeString()}
+        {new Date(item.created_at).toLocaleTimeString([], {
+          hour: "numeric",
+          minute: "numeric",
+        })}
       </Text>
     </View>
   );
@@ -79,6 +104,7 @@ function ConversationScreen({ route, navigation }) {
       keyboardVerticalOffset={90}
     >
       <FlatList
+        ref={flatListRef}
         data={data}
         keyExtractor={(item) => item.message_id.toString()}
         renderItem={renderItem}
@@ -113,6 +139,7 @@ const styles = StyleSheet.create({
   messageLeft: {
     alignSelf: "flex-start",
     backgroundColor: "#e5e5ea",
+    borderRadius: 20,
     padding: 10,
     marginVertical: 5,
     maxWidth: "75%",
@@ -130,7 +157,7 @@ const styles = StyleSheet.create({
     fontSize: 16,
   },
   messageTime: {
-    color: "#666",
+    color: "#999",
     fontSize: 12,
     marginTop: 5,
   },

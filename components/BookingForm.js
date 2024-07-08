@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState,useContext } from "react";
 import {
   View,
   Text,
@@ -11,13 +11,16 @@ import {
 } from "react-native";
 import { Calendar } from "react-native-calendars";
 import { GlobalStyles } from "../constants/styles";
-import { getAvailability } from "../utils/booking-form-api-call";
+import { getAvailability, postBooking } from "../utils/booking-form-api-call";
 import moment from "moment";
+import { GlobalContext } from "../context/global-context";
 
 const BookingForm = ({ entertainer, onShowEntertainers }) => {
   const [unavailableDates, setUnavailableDates] = useState([]);
   const [selectedDate, setSelectedDate] = useState({});
   const firstDayOfCurrentMonth = moment().format("YYYY-MM-DD");
+  const {user, token} = useContext(GlobalContext)
+
 
   useEffect(() => {
     getAvailability(entertainer.user_id)
@@ -39,13 +42,15 @@ const BookingForm = ({ entertainer, onShowEntertainers }) => {
   });
 
   const [bookingTemplate, setBookingTemplate] = useState({
-    user_id: "",
+    user_id: user.user_id,
     entertainer_id: entertainer.user_id,
     booking_date: new Date(),
     event_date: "",
     event_details: "",
     address: "",
   });
+
+ 
 
   const onDayPress = (day) => {
     setSelectedDate(day.dateString);
@@ -66,7 +71,16 @@ const BookingForm = ({ entertainer, onShowEntertainers }) => {
   };
 
   const handleConfirmBooking = () => {
-    console.log(bookingTemplate);
+   console.log(user.user_id)
+    postBooking(token, bookingTemplate).then((response) => {
+      
+      console.log(response)
+    })
+    .catch((err) => {
+      
+      console.log(err)
+    })
+
   };
 
   return (

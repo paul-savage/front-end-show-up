@@ -15,3 +15,11 @@ export const getAvailability = (user_id) => {
         return response
     })
 }
+
+export const postBooking = (token, body) => {
+    console.log(body)
+    const headers = { headers: { Authorization: `${token}` } };
+    return showUp.post("/bookings", body, headers).then((response) => {
+        return response.data
+    })
+}

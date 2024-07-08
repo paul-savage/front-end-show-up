@@ -162,6 +162,7 @@ const styles = StyleSheet.create({
     borderColor: "lightgrey",
     borderRadius: 8,
     marginTop: 8,
+    backgroundColor: "#ffffff"
   },
   pickerItem: {},
   radio: {
@@ -170,6 +171,7 @@ const styles = StyleSheet.create({
   text: {
     fontSize: 24,
     textAlign: "center",
+    color: "#333",
   },
   eName: {
     fontSize: 16,
@@ -180,24 +182,38 @@ const styles = StyleSheet.create({
   dName: {
     textAlign: "center",
     marginTop: 6,
+    color: "#555",
   },
   labelNone: {
-    fontSize: 24,
+    fontSize: 18,
     textAlign: "center",
     color: "red",
+    marginTop: 20,
   },
   buttonContainer: {
     marginTop: 10,
     marginBottom: 12,
+    paddingHorizontal: 20,
   },
   image: {
     width: "100%",
-    height: 350,
+    height: 250,
+    borderRadius: 12,
+    marginBottom: 8,
   },
   imageContainer: {
-    borderRadius: 16,
+    borderRadius: 12,
     overflow: "hidden",
     backgroundColor: "#f8e0f0",
-    marginTop: 8,
+    marginTop: 16,
+    padding: 16,
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    elevation: 5,
   },
 });

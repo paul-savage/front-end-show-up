@@ -111,7 +111,7 @@ const styles = StyleSheet.create({
     paddingTop: 65,
     fontSize: 30,
     fontWeight: "bold",
-    color: "white"
+    color: "white",
   },
   itemContainer: {
     flexDirection: "row",

@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { View, Text, StyleSheet, Image, TextInput, Button } from 'react-native'
 import { Calendar } from 'react-native-calendars';
 import { GlobalStyles } from "../constants/styles";
-import { getAvailability } from '../utils/booking-form-api-calls';
+import { getAvailability } from '../utils/booking-form-api-call';
 import moment from 'moment';
 
 const BookingForm = ({entertainer, onShowEntertainers}) => {

@@ -289,3 +289,10 @@ export const getEntertainerBookings = (token, id) => {
 export const deleteBooking = (id) => {
   return showUp.delete(`/bookings/${id}`)
 }
+
+export const confirmBooking = (id) => {
+  return showUp.patch(`/bookings/${id}`, {status: 'confirmed'}).then((response) => {
+    console.log(response.data)
+    return response.data.booking
+  })
+}

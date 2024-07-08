@@ -5,7 +5,7 @@ const TESTING = false;
 /////////////////////////////////////////////////////
 
 const showUp = axios.create({
-  // baseURL: "http://localhost:9090/api",
+  //baseURL: "http://localhost:9090/api"
   baseURL: "https://back-end-show-up.onrender.com/api",
 });
 
@@ -70,6 +70,27 @@ export const me = (token) => {
     return response.data;
   });
 };
+
+export const uploadFile = (file, token) => {
+  if (TESTING) {
+    return Promise.resolve({ message: "File upload simulation" });
+  }
+  const form = new FormData();
+  form.append("file", file);
+
+  const headers = { 
+    headers: { 
+      Authorization: `${token}`, 
+      "Content-Type": "multipart/form-data" 
+    } 
+  };
+
+  return showUp.post("/upload", form, headers).then((response) => {
+    return response.data;
+  });
+};
+
+
 
 export const conversations = (token) => {
   const headers = { headers: { Authorization: `${token}` } };

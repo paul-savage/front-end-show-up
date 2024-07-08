@@ -1,15 +1,15 @@
+import React, { useState, useContext } from 'react';
 import {
   View,
   Text,
   TextInput,
-  Button,
+  TouchableOpacity,
   StyleSheet,
   ScrollView,
-} from "react-native";
-import { useState, useContext } from "react";
-import { GlobalContext } from "../../context/global-context";
-import { GlobalStyles } from "../../constants/styles";
-import { authenticateUser, me } from "../../utils/apicalls";
+  SafeAreaView,
+} from 'react-native';
+import { GlobalContext } from '../../context/global-context';
+import { authenticateUser, me } from '../../utils/apicalls';
 
 const UserLoggingIn = ({
   loginName,
@@ -22,7 +22,6 @@ const UserLoggingIn = ({
   gotoCreateEntertainer,
 }) => {
   const { setUser, setIsLoggedIn, setToken } = useContext(GlobalContext);
-
   const [error, setError] = useState(null);
 
   const handleChangeLoginName = (value) => {
@@ -45,20 +44,19 @@ const UserLoggingIn = ({
       .then((token) => {
         me(token)
           .then((response) => {
-            setLoginName("");
-            setPassword("");
+            setLoginName('');
+            setPassword('');
             setUser(response);
             setIsLoggedIn(true);
-            //console.log("Log in Data----->>>>>", response);
             gotoLoggedIn();
           })
           .catch((err) => {
-            setError("Invalid username or password");
+            setError('Invalid username or password');
             console.log(err);
           });
       })
       .catch((err) => {
-        setError("Invalid username or password");
+        setError('Invalid username or password');
         console.log(err);
       });
   };
@@ -66,12 +64,12 @@ const UserLoggingIn = ({
   const handleCreateCustomer = () => {
     setError(null);
     setTemplate({
-      username: "",
-      password: "",
-      first_name: "",
-      last_name: "",
-      email: "",
-      user_type: "Client",
+      username: '',
+      password: '',
+      first_name: '',
+      last_name: '',
+      email: '',
+      user_type: 'Client',
     });
     gotoCreateCustomer();
   };
@@ -79,113 +77,143 @@ const UserLoggingIn = ({
   const handleCreateEntertainer = () => {
     setError(null);
     setTemplate({
-      username: "",
-      password: "",
-      first_name: "",
-      last_name: "",
-      email: "",
-      user_type: "Entertainer",
-      category: "",
-      location: "",
-      entertainer_name: "",
-      description: "",
+      username: '',
+      password: '',
+      first_name: '',
+      last_name: '',
+      email: '',
+      user_type: 'Entertainer',
+      category: '',
+      location: '',
+      entertainer_name: '',
+      description: '',
       price: 0,
     });
     gotoCreateEntertainer();
   };
 
   return (
-    <ScrollView>
-      <View style={styles.rootContainer}>
-        <View style={styles.inputContainer}>
-          <Text style={styles.label}>Enter user name:</Text>
-          <TextInput
-            style={styles.input}
-            value={loginName}
-            autoCapitalize="none"
-            autoCorrect={false}
-            onChangeText={handleChangeLoginName}
-          />
-          <Text style={styles.label}>Enter password:</Text>
-          <TextInput
-            style={styles.input}
-            value={password}
-            autoCapitalize="none"
-            autoCorrect={false}
-            secureTextEntry={true}
-            onChangeText={handleChangePassword}
-          />
-          {error ? (
-            <View style={styles.errorContainer}>
-              <Text style={styles.errorText}>{error}</Text>
-            </View>
-          ) : null}
-          <View style={styles.buttonWrapper}>
-            <Button title="Log In" onPress={handleLogIn} />
-          </View>
-          <Text style={styles.bigOR}>OR</Text>
-          <Text style={styles.label}>Create a profile</Text>
-          <View style={styles.buttonContainer}>
-            <View style={styles.buttonWrapper}></View>
-            <Button title="Customer" onPress={handleCreateCustomer} />
-            <Button title="Entertainer" onPress={handleCreateEntertainer} />
+    <SafeAreaView style={styles.safeArea}>
+      <ScrollView contentContainerStyle={styles.scrollContent}>
+        <View style={styles.rootContainer}>
+          <Text style={styles.title}>Log In</Text>
+          <View style={styles.inputContainer}>
+            <TextInput
+              style={styles.input}
+              placeholder="Username"
+              value={loginName}
+              autoCapitalize="none"
+              autoCorrect={false}
+              onChangeText={handleChangeLoginName}
+            />
+            <TextInput
+              style={styles.input}
+              placeholder="Password"
+              value={password}
+              autoCapitalize="none"
+              autoCorrect={false}
+              secureTextEntry={true}
+              onChangeText={handleChangePassword}
+            />
+            {error ? (
+              <View style={styles.errorContainer}>
+                <Text style={styles.errorText}>{error}</Text>
+              </View>
+            ) : null}
+            <TouchableOpacity style={styles.button} onPress={handleLogIn}>
+              <Text style={styles.buttonText}>Log In</Text>
+            </TouchableOpacity>
+            <Text style={styles.bigOR}>OR</Text>
+            <Text style={styles.title}>Register</Text>
+            <TouchableOpacity style={styles.button} onPress={handleCreateCustomer}>
+              <Text style={styles.buttonText}>Customer</Text>
+            </TouchableOpacity>
+            
+            <TouchableOpacity style={styles.button} onPress={handleCreateEntertainer}>
+              <Text style={styles.buttonText}>Entertainer</Text>
+            </TouchableOpacity>
           </View>
         </View>
-      </View>
-    </ScrollView>
+      </ScrollView>
+    </SafeAreaView>
   );
 };
 
 export default UserLoggingIn;
 
 const styles = StyleSheet.create({
-  rootContainer: {
+  safeArea: {
     flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-    marginTop: 100,
+    backgroundColor: '#f8f8f8',
+  },
+  scrollContent: {
+    flexGrow: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    paddingVertical: 32,
+  },
+  rootContainer: {
+    width: '100%',
+    maxWidth: 400,
+    padding: 20,
+    borderRadius: 10,
+    backgroundColor: '#fff',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    elevation: 5,
+  },
+  title: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    textAlign: 'center',
+    marginBottom: 16,
+    color: 'darkslateblue',
   },
   inputContainer: {
-    marginHorizontal: 4,
-    marginVertical: 8,
-    width: "80%",
-  },
-  label: {
-    fontSize: 18,
-    color: GlobalStyles.colors.primary100,
-    color: "black",
-    marginBottom: 4,
-    textAlign: "center",
+    width: '100%',
   },
   input: {
-    backgroundColor: GlobalStyles.colors.primary100,
-    color: GlobalStyles.colors.primary700,
-    padding: 6,
-    borderRadius: 6,
-    fontSize: 18,
+    width: '100%',
+    padding: 10,
+    borderRadius: 8,
+    borderWidth: 1,
+    borderColor: '#ccc',
+    marginBottom: 12,
   },
-  buttonContainer: {
-    flexDirection: "row",
-    marginTop: 20,
-    justifyContent: "space-evenly",
+  button: {
+    backgroundColor: 'darkslateblue',
+    padding: 10,
+    borderRadius: 8,
+    alignItems: 'center',
+    marginBottom: 10,
   },
-  buttonWrapper: {
-    marginVertical: 8,
+  buttonText: {
+    color: '#fff',
+    fontWeight: 'bold',
+    fontSize: 16,
   },
   bigOR: {
     fontSize: 32,
     marginVertical: 24,
-    textAlign: "center",
+    textAlign: 'center',
+  },
+  label: {
+    fontSize: 18,
+    textAlign: 'center',
+    marginBottom: 8,
+    color: 'black',
   },
   errorContainer: {
     marginVertical: 12,
-    backgroundColor: "#dd8888",
+    backgroundColor: '#dd8888',
     borderRadius: 10,
   },
   errorText: {
     fontSize: 20,
-    textAlign: "center",
-    color: "white",
+    textAlign: 'center',
+    color: 'white',
     padding: 6,
   },
 });

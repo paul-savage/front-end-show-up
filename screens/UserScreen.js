@@ -88,6 +88,8 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     marginTop: 100,
+    backgroundColor: "#f8f9fa",
+    padding: 20,
   },
   highlight: {
     fontWeight: "bold",

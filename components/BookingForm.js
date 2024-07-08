@@ -8,6 +8,8 @@ import {
   Button,
   KeyboardAvoidingView,
   ScrollView,
+  Platform, 
+  TouchableWithoutFeedback
 } from "react-native";
 import { Calendar } from "react-native-calendars";
 import { GlobalStyles } from "../constants/styles";
@@ -71,13 +73,10 @@ const BookingForm = ({ entertainer, onShowEntertainers }) => {
   };
 
   const handleConfirmBooking = () => {
-   console.log(user.user_id)
     postBooking(token, bookingTemplate).then((response) => {
-      
-      console.log(response)
+     
     })
     .catch((err) => {
-      
       console.log(err)
     })
 
@@ -85,7 +84,7 @@ const BookingForm = ({ entertainer, onShowEntertainers }) => {
 
   return (
     <>
-      <KeyboardAvoidingView>
+      <KeyboardAvoidingView behavior={Platform.OS === "ios" ? "padding" : "height"}>
         <ScrollView>
           <View style={styles.rootContainer}>
             <Image

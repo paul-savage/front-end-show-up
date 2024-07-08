@@ -33,7 +33,15 @@ function ConversationScreen({ route, navigation }) {
     setRefreshing(true);
     getConversation(token, username)
       .then((conversation) => {
-        setData(conversation);
+        setData((prevData) => {
+          const newMessages = conversation.filter(
+            (newMsg) =>
+              !prevData.some(
+                (prevMsg) => prevMsg.message_id === newMsg.message_id
+              )
+          );
+          return [...prevData, ...newMessages];
+        });
         if (conversation.length > 0) {
           const message = conversation[0];
           const recipientId =

@@ -104,13 +104,14 @@ const styles = StyleSheet.create({
     alignItems: "flex-start",
     borderBottomWidth: 1,
     borderBottomColor: "#ccc",
-    backgroundColor: "yellow",
+    backgroundColor: "darkslateblue",
   },
   headerTitle: {
     paddingLeft: 15,
     paddingTop: 65,
     fontSize: 30,
     fontWeight: "bold",
+    color: "white"
   },
   itemContainer: {
     flexDirection: "row",

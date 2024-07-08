@@ -9,7 +9,8 @@ import {
   KeyboardAvoidingView,
   ScrollView,
   Platform, 
-  TouchableWithoutFeedback
+  Modal,
+  Pressable,
 } from "react-native";
 import { Calendar } from "react-native-calendars";
 import { GlobalStyles } from "../constants/styles";
@@ -21,6 +22,7 @@ const BookingForm = ({ entertainer, onShowEntertainers }) => {
   const [unavailableDates, setUnavailableDates] = useState([]);
   const [selectedDate, setSelectedDate] = useState({});
   const firstDayOfCurrentMonth = moment().format("YYYY-MM-DD");
+  const [modalVisible, setModalVisible] = useState(false);
   const {user, token} = useContext(GlobalContext)
 
 
@@ -80,7 +82,7 @@ const BookingForm = ({ entertainer, onShowEntertainers }) => {
     }
     
     return Promise.all([postAvailability(availabilityObject), postBooking(token, bookingTemplate)]).then((response) => {
-      
+      setModalVisible(true)
     }).catch((err) => {
       console.log(err)
     })
@@ -131,6 +133,34 @@ const BookingForm = ({ entertainer, onShowEntertainers }) => {
           </View>
         </ScrollView>
       </KeyboardAvoidingView>
+
+
+      <View style={styles.centeredView}>
+      <Modal
+        animationType="slide"
+        transparent={true}
+        visible={modalVisible}
+        onRequestClose={() => {
+          setModalVisible(!modalVisible);
+          onShowEntertainers();
+        }}>
+        <View style={styles.centeredView}>
+          <View style={styles.modalView}>
+            <Text style={styles.modalText}>Booking Confirmed!</Text>
+            <Pressable
+              style={[styles.button, styles.buttonClose]}
+              onPress={() => {setModalVisible(!modalVisible); onShowEntertainers()}}>
+              <Text style={styles.textStyle}>Go Home</Text>
+            </Pressable>
+          </View>
+        </View>
+      </Modal>
+      <Pressable
+        style={[styles.button, styles.buttonOpen]}
+        onPress={() => setModalVisible(true)}>
+        <Text style={styles.textStyle}>Show Modal</Text>
+      </Pressable>
+    </View>
     </>
   );
 };
@@ -192,5 +222,46 @@ const styles = StyleSheet.create({
   image: {
     width: 100,
     height: 100,
+  },
+  centeredView: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginTop: 22,
+  },
+  modalView: {
+    margin: 20,
+    backgroundColor: 'white',
+    borderRadius: 20,
+    padding: 35,
+    alignItems: 'center',
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 4,
+    elevation: 5,
+  },
+  button: {
+    borderRadius: 20,
+    padding: 10,
+    elevation: 2,
+  },
+  buttonOpen: {
+    backgroundColor: '#F194FF',
+  },
+  buttonClose: {
+    backgroundColor: '#2196F3',
+  },
+  textStyle: {
+    color: 'white',
+    fontWeight: 'bold',
+    textAlign: 'center',
+  },
+  modalText: {
+    marginBottom: 15,
+    textAlign: 'center',
   },
 });

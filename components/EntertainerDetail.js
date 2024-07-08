@@ -6,13 +6,18 @@ import {
   StyleSheet,
   ScrollView,
 } from "react-native";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useContext } from "react";
+import { GlobalContext } from "../context/global-context";
+
 
 const EntertainerDetail = ({
   entertainer,
   onShowEntertainers,
   onBookingForm,
 }) => {
+
+  const {isLoggedIn} = useContext(GlobalContext)
+
   return (
     <>
       <View style={styles.rootContainer}>
@@ -29,7 +34,7 @@ const EntertainerDetail = ({
             <Text style={styles.dName}>{entertainer.description}</Text>
             <View style={styles.buttonContainer}>
               <Button title="Back to listings" onPress={onShowEntertainers} />
-              <Button title="Book now!" onPress={onBookingForm} />
+              { isLoggedIn ? <Button title="Book now!" onPress={onBookingForm} /> : <Text style={styles.eName}>Log in to book</Text>}
             </View>
           </View>
         </ScrollView>

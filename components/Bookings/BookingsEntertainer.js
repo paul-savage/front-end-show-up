@@ -9,7 +9,7 @@ import {
 import { useEffect, useState } from "react";
 import { useContext } from "react";
 import { GlobalContext } from "../../context/global-context";
-import { getEntertainerBookings } from "../../utils/apicalls";
+import { getEntertainerBookings, deleteBooking, confirmBooking } from "../../utils/apicalls";
 import { reformatTime } from "../../utils/utils";
 import LoadingOverlay from "../LoadingOverlay";
 
@@ -23,7 +23,7 @@ const BookingsEntertainer = () => {
   useEffect(() => {
     getEntertainerBookings(token, user.user_id)
       .then((arr) => {
-        setBookings(arr);
+        setBookings(sortBookings(arr));
         setIsLoading(false);
       })
       .catch((err) => {
@@ -32,6 +32,38 @@ const BookingsEntertainer = () => {
         setIsLoading(false);
       });
   }, []);
+
+
+  const handleCancellation = (id) => {
+    deleteBooking(id).then(() => {
+      setBookings(bookings.filter((booking) => {
+        return booking.booking_id !== id
+      }))
+    })
+    .catch((err) => {
+      console.log(err)
+    })
+  }
+
+  const convertDateToTimestamp = (event_date) => {
+    return new Date(event_date).getTime();
+  }
+
+  const sortBookings = (bookings) => {
+    const bookingsCopy = [...bookings]
+    return bookingsCopy.sort((a,b) => {return convertDateToTimestamp(a.event_date) > convertDateToTimestamp(b.event_date) ? 1 : -1})
+  }
+
+
+ 
+  const handleConfirmation = (id) => {
+    confirmBooking(id).then(() => {
+      setBookings(sortBookings(bookings))
+    })
+    .catch((err) => {
+      console.log(err)
+    })
+  }
 
   if (isLoading) {
     return <LoadingOverlay />;
@@ -66,8 +98,13 @@ const BookingsEntertainer = () => {
                   Date: {reformatTime(booking.booking_date)}
                 </Text>
                 <Text style={styles.bookingText}>
+                  Date: {booking.event_date}
+                </Text>
+                <Text style={styles.bookingText}>
                   Address: {booking.address}
                 </Text>
+                {booking.status === 'pending' ? <Button title='Confirm' onPress={handleConfirmation.bind(this, booking.booking_id)}/>: <Text>Booking Confirmed!</Text>}
+                <Button onPress={handleCancellation.bind(this, booking.booking_id)} title='Cancel Booking' />
               </View>
             ))}
           </View>

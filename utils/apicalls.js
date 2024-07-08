@@ -271,3 +271,30 @@ export const getBookings = () => {
     return response.data.bookings;
   });
 };
+
+
+export const getCustomerBookings = (token, id) => {
+  const headers = { headers: { Authorization: `${token}` } };
+  return showUp.get(`/customer-bookings/${id}`, headers).then((response) => {
+    return response.data.bookings;
+  });
+};
+
+export const getEntertainerBookings = (token, id) => {
+  const headers = { headers: { Authorization: `${token}` } };
+  return showUp.get(`/entertainer-bookings/${id}`, headers).then((response) => {
+    return response.data.bookings;
+  });
+};
+
+export const deleteBooking = (id) => {
+  return showUp.delete(`/bookings/${id}`)
+}
+
+export const confirmBooking = (id) => {
+  return showUp.patch(`/bookings/${id}`, {status: 'confirmed'}).then((response) => {
+    console.log(response.data)
+    return response.data.booking
+  })
+}
+

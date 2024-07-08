@@ -9,7 +9,7 @@ import {
 import { useEffect, useState } from "react";
 import { useContext } from "react";
 import { GlobalContext } from "../../context/global-context";
-import { getCustomerBookings } from "../../utils/apicalls";
+import { getCustomerBookings, deleteBooking } from "../../utils/apicalls";
 import { reformatTime } from "../../utils/utils";
 import LoadingOverlay from "../LoadingOverlay";
 
@@ -32,6 +32,18 @@ const BookingsClient = () => {
         setIsLoading(false);
       });
   }, []);
+
+
+  const handleCancellation = (id) => {
+    deleteBooking(id).then(() => {
+      setBookings(bookings.filter((booking) => {
+        return booking.booking_id !== id
+      }))
+    })
+    .catch((err) => {
+      console.log(err)
+    })
+  }
 
   if (isLoading) {
     return <LoadingOverlay />;
@@ -68,6 +80,8 @@ const BookingsClient = () => {
                 <Text style={styles.bookingText}>
                   Address: {booking.address}
                 </Text>
+                {booking.status === 'pending' ? <Text>Awaiting confirmation </Text> : <Text>Booking Confirmed!</Text>}
+                <Button onPress={handleCancellation.bind(this, booking.booking_id)} title='Cancel Booking' />
               </View>
             ))}
           </View>

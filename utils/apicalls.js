@@ -285,3 +285,7 @@ export const getEntertainerBookings = (token, id) => {
     return response.data.bookings;
   });
 };
+
+export const deleteBooking = (id) => {
+  return showUp.delete(`/bookings/${id}`)
+}

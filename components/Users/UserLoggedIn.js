@@ -8,16 +8,20 @@ import {
   StyleSheet,
   SafeAreaView,
   ScrollView,
+  ActivityIndicator,
 } from 'react-native';
 import { Picker } from '@react-native-picker/picker';
+import * as ImagePicker from 'expo-image-picker';
 import { GlobalContext } from '../../context/global-context';
-import { getCategories, getLocations } from '../../utils/apicalls';
+import { getCategories, getLocations, uploadFile } from '../../utils/apicalls';
 
 const UserLoggedIn = ({ gotoLoggingIn }) => {
-  const { user, setUser, setToken, setIsLoggedIn } = useContext(GlobalContext);
+  const { user, setUser, setToken, setIsLoggedIn, token } = useContext(GlobalContext);
   const [editMode, setEditMode] = useState(false);
   const [categories, setCategories] = useState([]);
   const [locations, setLocations] = useState([]);
+  const [uploading, setUploading] = useState(false);
+  const [uploadedImage, setUploadedImage] = useState(null);
   const [editedUser, setEditedUser] = useState({
     category: user.category,
     location: user.location,
@@ -52,6 +56,41 @@ const UserLoggedIn = ({ gotoLoggingIn }) => {
     setEditedUser({ ...editedUser, [key]: value });
   };
 
+  const handleChoosePhoto = async () => {
+    const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
+    if (status !== 'granted') {
+      alert('Sorry, we need camera roll permissions to make this work!');
+      return;
+    }
+
+    let result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      allowsEditing: true,
+      aspect: [1, 1],
+      quality: 1,
+    });
+
+    if (!result.canceled && result.assets && result.assets.length > 0) {
+      const asset = result.assets[0];
+      const file = {
+        uri: asset.uri,
+        name: asset.uri.split('/').pop(),
+        type: asset.type || 'image/jpeg',
+      };
+
+      setUploading(true);
+      uploadFile(file, token)
+        .then((res) => {
+          setUploadedImage(asset.uri);
+          setUploading(false);
+        })
+        .catch((err) => {
+          console.log(err);
+          setUploading(false);
+        });
+    }
+  };
+
   return (
     <SafeAreaView style={styles.safeArea}>
       <ScrollView contentContainerStyle={styles.scrollContent}>
@@ -59,7 +98,7 @@ const UserLoggedIn = ({ gotoLoggingIn }) => {
           <View style={styles.card}>
             <Image
               style={styles.avatar}
-              source={{ uri: user.profile_img_url }}
+              source={{ uri: uploadedImage || user.profile_img_url }}
             />
             <Text style={styles.eName}>{user.entertainer_name}</Text>
             <View style={styles.profileInfo}>
@@ -116,7 +155,7 @@ const UserLoggedIn = ({ gotoLoggingIn }) => {
                       onChangeText={(value) => handleChange('price', value)}
                     />
                   ) : (
-                    <Text style={styles.value}>£{user.price}</Text>
+                    <Text style={styles.value}>${user.price}</Text>
                   )}
                 </>
               )}
@@ -129,6 +168,16 @@ const UserLoggedIn = ({ gotoLoggingIn }) => {
               <TouchableOpacity style={styles.button} onPress={handleEditProfile}>
                 <Text style={styles.buttonText}>Edit Profile</Text>
               </TouchableOpacity>
+            )}
+            <TouchableOpacity style={styles.button} onPress={handleChoosePhoto}>
+              <Text style={styles.buttonText}>Upload Photo</Text>
+            </TouchableOpacity>
+            {uploading && <ActivityIndicator size="large" color="#0000ff" />}
+            {uploadedImage && (
+              <Image
+                source={{ uri: uploadedImage }}
+                style={styles.uploadedImage}
+              />
             )}
           </View>
         </View>
@@ -228,5 +277,11 @@ const styles = StyleSheet.create({
   },
   logoutButton: {
     marginTop: 20,
+  },
+  uploadedImage: {
+    width: 100,
+    height: 100,
+    borderRadius: 50,
+    marginTop: 16,
   },
 });

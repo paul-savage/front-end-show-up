@@ -13,7 +13,7 @@ import {
 } from "react-native";
 import { Calendar } from "react-native-calendars";
 import { GlobalStyles } from "../constants/styles";
-import { getAvailability, postBooking } from "../utils/booking-form-api-call";
+import { getAvailability, postBooking, postAvailability } from "../utils/booking-form-api-call";
 import moment from "moment";
 import { GlobalContext } from "../context/global-context";
 
@@ -67,16 +67,23 @@ const BookingForm = ({ entertainer, onShowEntertainers }) => {
   };
 
   const handleChange = (prop, value) => {
+    console.log({entertainer_id: bookingTemplate})
     setBookingTemplate((current) => {
       return { ...current, [prop]: value };
     });
   };
 
   const handleConfirmBooking = () => {
-    postBooking(token, bookingTemplate).then((response) => {
-     
-    })
-    .catch((err) => {
+    const availabilityObject = {
+      entertainer_id: entertainer.entertainer_id,
+      date: bookingTemplate.event_date,
+      available: false
+    }
+    
+    return Promise.all([postAvailability(availabilityObject), postBooking(token, bookingTemplate)]).then((response) => {
+      console.log(response[0])
+      console.log(response[1])
+    }).catch((err) => {
       console.log(err)
     })
 

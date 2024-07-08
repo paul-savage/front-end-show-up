@@ -24,6 +24,8 @@ export const postBooking = (token, body) => {
     })
 }
 
-export const postAvailability = () => {
-
+export const postAvailability = (body) => {
+    return showUp.post("/availability", body).then((response) => {
+        return response.data
+    })
 }

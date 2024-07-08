@@ -105,7 +105,7 @@ export const checkUsername = (username) => {
   if (TESTING) {
     return Promise.resolve({ usernameTaken: false });
   }
-  return showUp.get(`/check-username/${username}`).then((response) => {
+  return showUp.get("/check-username/${username}").then((response) => {
     return response;
   });
 };
@@ -268,20 +268,6 @@ export const getBookings = () => {
 
   return showUp.get("/bookings").then((response) => {
     console.log(response.data);
-    return response.data.bookings;
-  });
-};
-
-export const getCustomerBookings = (token, id) => {
-  const headers = { headers: { Authorization: `${token}` } };
-  return showUp.get(`/customer-bookings/${id}`, headers).then((response) => {
-    return response.data.bookings;
-  });
-};
-
-export const getEntertainerBookings = (token, id) => {
-  const headers = { headers: { Authorization: `${token}` } };
-  return showUp.get(`/entertainer-bookings/${id}`, headers).then((response) => {
     return response.data.bookings;
   });
 };

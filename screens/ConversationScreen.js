@@ -41,7 +41,7 @@ function ConversationScreen({ route, navigation }) {
     setRefreshing(true);
     getConversation(token, username)
       .then((conversation) => {
-        console.log("Fetched conversation:", conversation); // Debugging log
+        console.log("Fetched conversation:", conversation);
         setData((prevData) => {
           const newMessages = conversation.filter(
             (newMsg) =>
@@ -93,22 +93,21 @@ function ConversationScreen({ route, navigation }) {
         message_id: Date.now(),
         sender_username: currentUser.username,
         message,
-        created_at: new Date().toISOString(),
+        created_at: new Date(),
       };
-      console.log("Sending message:", newMessage); // Debugging log
+      console.log("Sending message:", newMessage);
       setData((prevData) => [...prevData, newMessage]);
       setMessage("");
       sendMessage(token, recipientId, message)
         .then((sentMessage) => {
-          console.log("Message sent:", sentMessage); // Debugging log
-          // Optional: Replace the temporary message with the confirmed one
+          console.log("Message sent:", sentMessage);
           setData((prevData) => prevData.map(msg => msg.message_id === newMessage.message_id ? sentMessage : msg));
           if (flatListRef.current) {
             flatListRef.current.scrollToEnd({ animated: true });
           }
         })
         .catch((error) => {
-          console.error("Error sending message:", error); // Debugging log
+          console.error("Error sending message:", error);
         });
     }
   };

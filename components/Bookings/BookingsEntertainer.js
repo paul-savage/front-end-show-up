@@ -9,7 +9,7 @@ import {
 import { useEffect, useState } from "react";
 import { useContext } from "react";
 import { GlobalContext } from "../../context/global-context";
-import { getBookings } from "../../utils/apicalls";
+import { getEntertainerBookings } from "../../utils/apicalls";
 import { reformatTime } from "../../utils/utils";
 import LoadingOverlay from "../LoadingOverlay";
 
@@ -21,18 +21,13 @@ const BookingsEntertainer = () => {
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    // for the moment we have to get all bookings and
-    // filter out those that apply to the entertainer
-    getBookings()
+    getEntertainerBookings(token, user.user_id)
       .then((arr) => {
-        const entertainerBookings = arr.filter(
-          (booking) => booking.entertainer_id === user.user_id
-        );
-        //console.log("Entertainer----->>>>>", entertainerBookings);
-        setBookings(entertainerBookings);
+        setBookings(arr);
         setIsLoading(false);
       })
       .catch((err) => {
+        setBookings([]);
         setError("Error fetching entertainer booking data");
         setIsLoading(false);
       });

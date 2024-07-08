@@ -271,3 +271,17 @@ export const getBookings = () => {
     return response.data.bookings;
   });
 };
+
+export const getCustomerBookings = (token, id) => {
+  const headers = { headers: { Authorization: `${token}` } };
+  return showUp.get(`/customer-bookings/${id}`, headers).then((response) => {
+    return response.data.bookings;
+  });
+};
+
+export const getEntertainerBookings = (token, id) => {
+  const headers = { headers: { Authorization: `${token}` } };
+  return showUp.get(`/entertainer-bookings/${id}`, headers).then((response) => {
+    return response.data.bookings;
+  });
+};

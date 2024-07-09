@@ -7,6 +7,7 @@ import {
   ScrollView,
   KeyboardAvoidingView,
   Platform,
+  Alert,
 } from "react-native";
 import { useState, useContext } from "react";
 import { GlobalContext } from "../../context/global-context";
@@ -21,17 +22,13 @@ const UserCreateCustomer = ({
 }) => {
   const { setUser, setIsLoggedIn, setToken } = useContext(GlobalContext);
 
-  const [error, setError] = useState(null);
-
   const handleChangeClient = (prop, value) => {
-    setError(null);
     setTemplate((current) => {
       return { ...current, [prop]: value };
     });
   };
 
   const handleClientCreation = () => {
-    setError(null);
     registerUser(template)
       .then((response) => {
         setUser(response);
@@ -45,18 +42,17 @@ const UserCreateCustomer = ({
             gotoLoggedIn();
           })
           .catch((err) => {
-            setError("Error - missing or invalid entries");
+            Alert.alert("Input Error", "Invalid, or missing entries");
             console.log(err);
           });
       })
       .catch((err) => {
-        setError("Error - missing or invalid entries");
+        Alert.alert("Input Error", "Invalid, or missing entries");
         console.log(err);
       });
   };
 
   const handleCancelClientCreation = () => {
-    setError(null);
     gotoLoggingIn();
   };
 
@@ -108,11 +104,6 @@ const UserCreateCustomer = ({
               autoCorrect={false}
               onChangeText={handleChangeClient.bind(this, "email")}
             />
-            {error ? (
-              <View style={styles.errorContainer}>
-                <Text style={styles.errorText}>{error}</Text>
-              </View>
-            ) : null}
             <View style={styles.buttonWrapper}>
               <Button title="Create Account" onPress={handleClientCreation} />
             </View>
@@ -156,16 +147,5 @@ const styles = StyleSheet.create({
     padding: 6,
     borderRadius: 6,
     fontSize: 18,
-  },
-  errorContainer: {
-    marginVertical: 12,
-    backgroundColor: "#dd8888",
-    borderRadius: 10,
-  },
-  errorText: {
-    fontSize: 18,
-    textAlign: "center",
-    color: "white",
-    padding: 6,
   },
 });

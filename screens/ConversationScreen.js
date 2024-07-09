@@ -60,6 +60,9 @@ function ConversationScreen({ route, navigation }) {
               : message.recipient_id;
           setRecipientId(recipientId);
         }
+        else if (route.params.recipientId) {
+          setRecipientId(route.params.recipientId);
+        }
       })
       .finally(() => {
         setRefreshing(false);
@@ -142,18 +145,24 @@ function ConversationScreen({ route, navigation }) {
       behavior={Platform.OS === "ios" ? "padding" : undefined}
       keyboardVerticalOffset={90}
     >
-      <FlatList
-        ref={flatListRef}
-        data={data}
-        keyExtractor={(item) => item.message_id.toString()}
-        renderItem={renderItem}
-        refreshControl={
-          <RefreshControl
-            refreshing={refreshing}
-            onRefresh={fetchConversation}
-          />
-        }
-      />
+      {data.length === 0 ? (
+        <View style={styles.emptyContainer}>
+          <Text style={styles.emptyText}>Start the conversation!</Text>
+        </View>
+      ) : (
+        <FlatList
+          ref={flatListRef}
+          data={data}
+          keyExtractor={(item) => item.message_id.toString()}
+          renderItem={renderItem}
+          refreshControl={
+            <RefreshControl
+              refreshing={refreshing}
+              onRefresh={fetchConversation}
+            />
+          }
+        />
+      )}
       <View style={styles.inputContainer}>
         <TextInput
           style={styles.textInput}
@@ -174,6 +183,15 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: "#fff",
     padding: 10,
+  },
+  emptyContainer: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  emptyText: {
+    fontSize: 18,
+    color: "#999",
   },
   messageLeft: {
     alignSelf: "flex-start",

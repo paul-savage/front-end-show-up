@@ -7,6 +7,7 @@ import {
   ScrollView,
   KeyboardAvoidingView,
   Platform,
+  Alert,
 } from "react-native";
 import { useState, useContext } from "react";
 import { GlobalContext } from "../../context/global-context";
@@ -21,10 +22,7 @@ const UserCreateEntertainer = ({
 }) => {
   const { setUser, setIsLoggedIn, setToken } = useContext(GlobalContext);
 
-  const [error, setError] = useState(null);
-
   const handleChangeEntertainer = (prop, value) => {
-    setError(null);
     if (prop === "price") {
       value = +value;
     }
@@ -34,7 +32,6 @@ const UserCreateEntertainer = ({
   };
 
   const handleEntertainerCreation = () => {
-    setError(null);
     registerUser(template)
       .then((response) => {
         setUser(response);
@@ -48,18 +45,17 @@ const UserCreateEntertainer = ({
             gotoLoggedIn();
           })
           .catch((err) => {
-            setError("Error - missing or invalid entries");
+            Alert.alert("Input Error", "Invalid, or missing entries");
             console.log(err);
           });
       })
       .catch((err) => {
-        setError("Error - missing or invalid entries");
+        Alert.alert("Input Error", "Invalid, or missing entries");
         console.log(err);
       });
   };
 
   const handleCancelEntertainerCreation = () => {
-    setError(null);
     gotoLoggingIn();
   };
 
@@ -157,11 +153,6 @@ const UserCreateEntertainer = ({
               keyboardType="number-pad"
               onChangeText={handleChangeEntertainer.bind(this, "price")}
             />
-            {error ? (
-              <View style={styles.errorContainer}>
-                <Text style={styles.errorText}>{error}</Text>
-              </View>
-            ) : null}
             <View style={styles.buttonWrapper}>
               <Button
                 title="Create Account"
@@ -215,16 +206,5 @@ const styles = StyleSheet.create({
   inputMultiLine: {
     minHeight: 100,
     textAlignVertical: "top",
-  },
-  errorContainer: {
-    marginVertical: 12,
-    backgroundColor: "#dd8888",
-    borderRadius: 10,
-  },
-  errorText: {
-    fontSize: 18,
-    textAlign: "center",
-    color: "white",
-    padding: 6,
   },
 });

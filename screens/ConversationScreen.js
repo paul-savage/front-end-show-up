@@ -20,6 +20,7 @@ import { GlobalContext } from "../context/global-context";
 import { getConversation, me, sendMessage } from "../utils/apicalls";
 
 function ConversationScreen({ route, navigation }) {
+  console.log(route)
   const { token } = useContext(GlobalContext);
   const { username, first_name, last_name } = route.params;
   const [data, setData] = useState([]);
@@ -130,6 +131,7 @@ function ConversationScreen({ route, navigation }) {
     </View>
   );
 
+  console.log('data', {data})
   return (
     <KeyboardAvoidingView
       style={styles.rootContainer}

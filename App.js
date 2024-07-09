@@ -8,6 +8,7 @@ import UserScreen from "./screens/UserScreen";
 import BookingsScreen from "./screens/BookingsScreen";
 import GlobalContextProvider from "./context/global-context";
 import MessagingStackNavigator from './components/MessagingStackNavigator';
+import { navigationRef } from './utils/NavigatationRef'
 
 const BottomTab = createBottomTabNavigator();
 
@@ -16,7 +17,7 @@ export default function App() {
     <>
       <StatusBar style="dark" />
       <GlobalContextProvider>
-        <NavigationContainer>
+        <NavigationContainer ref={navigationRef}>
           <BottomTab.Navigator
             screenOptions={{
               headerStyle: { backgroundColor: "#3e04c3" },

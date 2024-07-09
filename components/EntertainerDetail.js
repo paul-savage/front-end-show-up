@@ -10,10 +10,20 @@ import {
   SafeAreaView,
 } from 'react-native';
 import { GlobalContext } from '../context/global-context';
+import { useNavigation } from "@react-navigation/native";
+import { navigate } from '../utils/NavigatationRef'
+import { navigateToConversationScreen } from '../utils/NavigationService'
+
 
 const EntertainerDetail = ({ entertainer, onShowEntertainers, onBookingForm }) => {
   const { isLoggedIn } = useContext(GlobalContext);
   const fadeAnim = useRef(new Animated.Value(0)).current;
+
+  const navigation = useNavigation();
+  // const contactEntertainer = ()=>{
+  //   navigation.navigate("ConversationScreen")
+  // }
+  
 
   useEffect(() => {
     Animated.timing(fadeAnim, {
@@ -44,6 +54,22 @@ const EntertainerDetail = ({ entertainer, onShowEntertainers, onBookingForm }) =
             </View>
             <Text style={styles.dName}>Price: {entertainer.price}</Text>
             <Text style={styles.description}>{entertainer.description}</Text>
+            <View style={styles.buttonContainer}>
+              {isLoggedIn ? (
+                <TouchableOpacity style={styles.contactbutton} onPress={() => {navigateToConversationScreen ({
+                  sender_id: 2,
+                  recipient_id: entertainer.user_id, 
+                  first_name: entertainer.first_name,
+                  last_name: entertainer.last_name 
+                })}}>
+                  <Text style={styles.buttonText}>Contact {entertainer.first_name}</Text>
+                </TouchableOpacity>
+              ) : (
+                <TouchableOpacity style={[styles.button, styles.inactiveButton]} disabled>
+                  <Text style={styles.buttonText}>Log in to contact {entertainer.first_name}</Text>
+                </TouchableOpacity>
+              )}
+            </View>
             <View style={styles.buttonContainer}>
               {isLoggedIn ? (
                 <TouchableOpacity style={styles.button} onPress={onBookingForm}>
@@ -146,6 +172,12 @@ const styles = StyleSheet.create({
   },
   button: {
     backgroundColor: 'darkslateblue',
+    padding: 10,
+    borderRadius: 8,
+    alignItems: 'center',
+  },
+  contactbutton: {
+    backgroundColor: '#AD8BB6',
     padding: 10,
     borderRadius: 8,
     alignItems: 'center',

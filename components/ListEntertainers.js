@@ -30,9 +30,9 @@ const ListEntertainers = ({
   const [location, setLocation] = useState('All');
   const [category, setCategory] = useState('All');
   const [modalVisible, setModalVisible] = useState(false);
-  const fadeAnim = useRef(new Animated.Value(0)).current;
-  const slideAnim = useRef(new Animated.Value(300)).current;
-  const anims = entertainers.map(() => useRef(new Animated.Value(0)).current);
+  // const fadeAnim = useRef(new Animated.Value(0)).current;
+  // const slideAnim = useRef(new Animated.Value(300)).current;
+  // const anims = entertainers.map(() => useRef(new Animated.Value(0)).current);
 
   useEffect(() => {
     const currentCategory = searchParams.category;
@@ -49,16 +49,16 @@ const ListEntertainers = ({
     }
   }, []);
 
-  useEffect(() => {
-    anims.forEach((anim, index) => {
-      Animated.timing(anim, {
-        toValue: 1,
-        duration: 500,
-        delay: index * 100,
-        useNativeDriver: true,
-      }).start();
-    });
-  }, [anims]);
+  // useEffect(() => {
+  //   anims.forEach((anim, index) => {
+  //     Animated.timing(anim, {
+  //       toValue: 1,
+  //       duration: 500,
+  //       delay: index * 100,
+  //       useNativeDriver: true,
+  //     }).start();
+  //   });
+  // }, [anims]);
 
   const handleShowDetails = (item) => {
     setEntertainer(item);
@@ -79,35 +79,45 @@ const ListEntertainers = ({
 
   const openModal = () => {
     setModalVisible(true);
-    Animated.timing(slideAnim, {
-      toValue: 0,
-      duration: 500,
-      useNativeDriver: true,
-    }).start();
+    // Animated.timing(slideAnim, {
+    //   toValue: 0,
+    //   duration: 500,
+    //   useNativeDriver: true,
+    // }).start();
   };
 
   const closeModal = () => {
-    Animated.timing(slideAnim, {
-      toValue: 300,
-      duration: 500,
-      useNativeDriver: true,
-    }).start(() => setModalVisible(false));
+    // Animated.timing(slideAnim, {
+    //   toValue: 300,
+    //   duration: 500,
+    //   useNativeDriver: true,
+    // }).start(() => setModalVisible(false));
+
+    setModalVisible(false)
   };
 
   const renderItem = ({ item, index }) => (
     <TouchableOpacity
       key={item.user_id}
-      style={{ opacity: anims[index] }}
+      // style={{ opacity: anims[index] }}
       onPress={() => handleShowDetails(item)}
     >
-      <Animated.View style={[styles.card, { opacity: anims[index] }]}>
+      {/* <Animated.View style={[styles.card, { opacity: anims[index] }]}>
         <Text style={styles.eName}>{item.entertainer_name}</Text>
         <Image style={styles.image} source={{ uri: item.profile_img_url }} />
         <View style={styles.cardContent}>
           <Text style={styles.dName}>{item.category}</Text>
           <Text style={styles.location}>{item.location}</Text>
         </View>
-      </Animated.View>
+      </Animated.View> */}
+      <View style={[styles.card]}>
+        <Text style={styles.eName}>{item.entertainer_name}</Text>
+        <Image style={styles.image} source={{ uri: item.profile_img_url }} />
+        <View style={styles.cardContent}>
+          <Text style={styles.dName}>{item.category}</Text>
+          <Text style={styles.location}>{item.location}</Text>
+        </View>
+      </View>
     </TouchableOpacity>
   );
 
@@ -140,7 +150,7 @@ const ListEntertainers = ({
           <TouchableWithoutFeedback onPress={closeModal}>
             <View style={styles.modalOverlay} />
           </TouchableWithoutFeedback>
-          <Animated.View style={[styles.modalContent, { transform: [{ translateY: slideAnim }] }]}>
+          {/* <Animated.View style={[styles.modalContent, { transform: [{ translateY: slideAnim }] }]}>
             <Text style={styles.text}>Select location:</Text>
             <View style={styles.pickerWrapper}>
               <Picker
@@ -170,7 +180,38 @@ const ListEntertainers = ({
             <View style={styles.modalButtonContainer}>
               <Button title="Search" color="#3e04c3" onPress={handleSearch} />
             </View>
-          </Animated.View>
+          </Animated.View> */}
+          <View style={[styles.modalContent]}>
+            <Text style={styles.text}>Select location:</Text>
+            <View style={styles.pickerWrapper}>
+              <Picker
+                style={styles.pickerItem}
+                itemStyle={{ height: 50 }}
+                selectedValue={location}
+                onValueChange={(itemValue) => setLocation(itemValue)}
+              >
+                {locations.map((location) => (
+                  <Picker.Item key={location} label={location} value={location} />
+                ))}
+              </Picker>
+            </View>
+            <Text style={styles.text}>Select category:</Text>
+            <View style={styles.pickerWrapper}>
+              <Picker
+                style={styles.pickerItem}
+                itemStyle={{ height: 50 }}
+                selectedValue={category}
+                onValueChange={(itemValue) => setCategory(itemValue)}
+              >
+                {categories.map((category) => (
+                  <Picker.Item key={category} label={category} value={category} />
+                ))}
+              </Picker>
+            </View>
+            <View style={styles.modalButtonContainer}>
+              <Button title="Search" color="#3e04c3" onPress={handleSearch} />
+            </View>
+          </View>
         </Modal>
       </View>
     </SafeAreaView>

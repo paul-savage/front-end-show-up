@@ -21,7 +21,7 @@ import { getConversation, me, sendMessage } from "../utils/apicalls";
 
 function ConversationScreen({ route, navigation }) {
   const { token } = useContext(GlobalContext);
-  const { username, first_name, last_name } = route.params;
+  const { username } = route.params;
   const [data, setData] = useState([]);
   const [refreshing, setRefreshing] = useState(false);
   const [message, setMessage] = useState("");
@@ -63,9 +63,11 @@ function ConversationScreen({ route, navigation }) {
       })
       .finally(() => {
         setRefreshing(false);
-        if (flatListRef.current) {
-          flatListRef.current.scrollToEnd({ animated: true });
-        }
+        setTimeout(() => {
+          if (flatListRef.current) {
+            flatListRef.current.scrollToEnd({ animated: true });
+          }
+        }, 500);
       });
   }, [token, username, currentUser]);
 
@@ -83,7 +85,9 @@ function ConversationScreen({ route, navigation }) {
 
   useEffect(() => {
     if (data.length > 0 && flatListRef.current) {
-      flatListRef.current.scrollToEnd({ animated: true });
+      setTimeout(() => {
+        flatListRef.current.scrollToEnd({ animated: true });
+      }, 500);
     }
   }, [data]);
 
@@ -102,9 +106,11 @@ function ConversationScreen({ route, navigation }) {
         .then((sentMessage) => {
           console.log("Message sent:", sentMessage);
           setData((prevData) => prevData.map(msg => msg.message_id === newMessage.message_id ? sentMessage : msg));
-          if (flatListRef.current) {
-            flatListRef.current.scrollToEnd({ animated: true });
-          }
+          setTimeout(() => {
+            if (flatListRef.current) {
+              flatListRef.current.scrollToEnd({ animated: true });
+            }
+          }, 500);
         })
         .catch((error) => {
           console.error("Error sending message:", error);

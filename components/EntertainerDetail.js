@@ -30,7 +30,11 @@ const EntertainerDetail = ({
   }, [fadeAnim]);
 
   const handleContactMe = () => {
-    navigation.navigate("ConversationScreen", { entertainer });
+    navigation.navigate("ConversationScreen", { 
+      username: entertainer.username,
+      first_name: entertainer.first_name,
+      last_name: entertainer.last_name, 
+    });
   };
 
   return (
@@ -97,6 +101,7 @@ const styles = StyleSheet.create({
   navBar: {
     flexDirection: "row",
     paddingTop: 16,
+    paddingBottom: 16,
     paddingHorizontal: 16,
     backgroundColor: "#fff",
     borderBottomWidth: 1,

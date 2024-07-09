@@ -155,7 +155,7 @@ const UserLoggedIn = ({ gotoLoggingIn }) => {
                       onChangeText={(value) => handleChange('price', value)}
                     />
                   ) : (
-                    <Text style={styles.value}>${user.price}</Text>
+                    <Text style={styles.value}>£{user.price}</Text>
                   )}
                 </>
               )}

@@ -179,7 +179,7 @@ const styles = StyleSheet.create({
   },
   messageRight: {
     alignSelf: "flex-end",
-    backgroundColor: "#007aff",
+    backgroundColor: "#A492FE",
     borderRadius: 20,
     padding: 10,
     marginVertical: 5,

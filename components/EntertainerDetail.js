@@ -30,10 +30,14 @@ const EntertainerDetail = ({
   }, [fadeAnim]);
 
   const handleContactMe = () => {
-    navigation.navigate("ConversationScreen", { 
-      username: entertainer.username,
-      first_name: entertainer.first_name,
-      last_name: entertainer.last_name, 
+    navigation.navigate("Messaging", {
+      screen: "ConversationScreen",
+      params: {
+        recipientId: entertainer.user_id,
+        username: entertainer.username,
+        first_name: entertainer.first_name,
+        last_name: entertainer.last_name,
+      },
     });
   };
 
@@ -72,7 +76,10 @@ const EntertainerDetail = ({
                 </TouchableOpacity>
               )}
               {isLoggedIn ? (
-                <TouchableOpacity style={styles.button} onPress={handleContactMe}>
+                <TouchableOpacity
+                  style={styles.button}
+                  onPress={handleContactMe}
+                >
                   <Text style={styles.buttonText}>Contact me</Text>
                 </TouchableOpacity>
               ) : (

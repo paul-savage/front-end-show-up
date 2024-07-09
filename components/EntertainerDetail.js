@@ -30,7 +30,15 @@ const EntertainerDetail = ({
   }, [fadeAnim]);
 
   const handleContactMe = () => {
-    navigation.navigate("ConversationScreen", { entertainer });
+    navigation.navigate("Messaging", {
+      screen: "ConversationScreen",
+      params: {
+        recipientId: entertainer.user_id,
+        username: entertainer.username,
+        first_name: entertainer.first_name,
+        last_name: entertainer.last_name,
+      },
+    });
   };
 
   return (
@@ -68,7 +76,10 @@ const EntertainerDetail = ({
                 </TouchableOpacity>
               )}
               {isLoggedIn ? (
-                <TouchableOpacity style={styles.button} onPress={handleContactMe}>
+                <TouchableOpacity
+                  style={styles.button}
+                  onPress={handleContactMe}
+                >
                   <Text style={styles.buttonText}>Contact me</Text>
                 </TouchableOpacity>
               ) : (
@@ -97,6 +108,7 @@ const styles = StyleSheet.create({
   navBar: {
     flexDirection: "row",
     paddingTop: 16,
+    paddingBottom: 16,
     paddingHorizontal: 16,
     backgroundColor: "#fff",
     borderBottomWidth: 1,

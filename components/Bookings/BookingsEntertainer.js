@@ -102,11 +102,11 @@ const BookingsEntertainer = () => {
 
             {bookings.map((booking) => (
               <View key={booking.booking_id} style={styles.bookingContainer}>
-                <Text style={styles.bookingText}>
-                  Details: {booking.event_details}
+                <Text style={styles.bookingNameText}>
+                  Name: {booking.first_name} {booking.last_name}
                 </Text>
                 <Text style={styles.bookingText}>
-                  Date: {reformatTime(booking.booking_date)}
+                  Details: {booking.event_details}
                 </Text>
                 <Text style={styles.bookingText}>
                   Date: {booking.event_date}
@@ -169,6 +169,12 @@ const styles = StyleSheet.create({
     fontSize: 16,
     textAlign: "left",
     marginVertical: 6,
+  },
+  bookingNameText: {
+    fontSize: 16,
+    textAlign: "left",
+    marginVertical: 6,
+    fontWeight: "bold"
   },
   button: {
     backgroundColor: "#433a83",

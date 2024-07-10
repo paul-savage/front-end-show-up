@@ -8,6 +8,7 @@ import {
   KeyboardAvoidingView,
   Platform,
   Alert,
+  TouchableOpacity,
 } from "react-native";
 import { useState, useContext } from "react";
 import { GlobalContext } from "../../context/global-context";
@@ -189,17 +190,19 @@ const UserCreateEntertainer = ({
                 "profile_img_url"
               )}
             />
-            <View style={styles.buttonWrapper}>
-              <Button
-                title="Create Account"
+            <View style={styles.buttonContainer}>
+              <TouchableOpacity
+              style={styles.button}
                 onPress={handleEntertainerCreation}
-              />
-            </View>
-            <View style={styles.buttonWrapper}>
-              <Button
-                title="Cancel"
-                onPress={handleCancelEntertainerCreation}
-              />
+               >
+                <Text style={styles.buttonText}>Create Account</Text>
+              </TouchableOpacity> 
+            <TouchableOpacity
+              style={styles.button}
+                onPress={handleEntertainerCreation}
+               >
+                <Text style={styles.buttonText}>Cancel</Text>
+              </TouchableOpacity> 
             </View>
           </View>
         </View>
@@ -228,12 +231,12 @@ const styles = StyleSheet.create({
   label: {
     fontSize: 18,
     color: GlobalStyles.colors.primary100,
-    color: "black",
-    marginBottom: 4,
-    textAlign: "center",
+    color: "#4D4C57",
+    marginBottom: 1,
+    textAlign: "left",
   },
   input: {
-    backgroundColor: GlobalStyles.colors.primary100,
+    backgroundColor: "#BAB8F3",
     color: GlobalStyles.colors.primary700,
     padding: 6,
     borderRadius: 6,
@@ -244,10 +247,10 @@ const styles = StyleSheet.create({
     textAlignVertical: "top",
   },
   pickerWrapper: {
-    borderWidth: 1,
-    borderColor: GlobalStyles.colors.primary200,
+    borderWidth: 2,
+    borderColor: "darkgrey",
     borderRadius: 8,
-    marginVertical: 10,
+    marginVertical: 5,
   },
   pickerItem: {
     //height: 50,
@@ -255,5 +258,24 @@ const styles = StyleSheet.create({
   text: {
     fontSize: 16,
     marginBottom: 10,
+  },
+  buttonContainer: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    marginTop: 16,
+    width: "100%",
+  },
+  button: {
+    backgroundColor: "darkslateblue",
+    padding: 10,
+    borderRadius: 8,
+    alignItems: "center",
+    flex: 1,
+    marginHorizontal: 5,
+  },
+  buttonText: {
+    color: "#fff",
+    fontWeight: "bold",
+    fontSize: 16,
   },
 });

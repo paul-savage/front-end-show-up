@@ -8,6 +8,7 @@ import {
   KeyboardAvoidingView,
   Platform,
   Alert,
+  TouchableOpacity,
 } from "react-native";
 import { useState, useContext } from "react";
 import { GlobalContext } from "../../context/global-context";
@@ -104,11 +105,19 @@ const UserCreateCustomer = ({
               autoCorrect={false}
               onChangeText={handleChangeClient.bind(this, "email")}
             />
-            <View style={styles.buttonWrapper}>
-              <Button title="Create Account" onPress={handleClientCreation} />
-            </View>
-            <View style={styles.buttonWrapper}>
-              <Button title="Cancel" onPress={handleCancelClientCreation} />
+           <View style={styles.buttonContainer}>
+              <TouchableOpacity
+              style={styles.button}
+                onPress={handleClientCreation}
+               >
+                <Text style={styles.buttonText}>Create Account</Text>
+              </TouchableOpacity> 
+            <TouchableOpacity
+              style={styles.button}
+                onPress={handleClientCreation}
+               >
+                <Text style={styles.buttonText}>Cancel</Text>
+              </TouchableOpacity> 
             </View>
           </View>
         </View>
@@ -137,15 +146,34 @@ const styles = StyleSheet.create({
   label: {
     fontSize: 18,
     color: GlobalStyles.colors.primary100,
-    color: "black",
+    color: "#4D4C57",
     marginBottom: 4,
-    textAlign: "center",
+    textAlign: "left",
   },
   input: {
-    backgroundColor: GlobalStyles.colors.primary100,
+    backgroundColor: "#BAB8F3",
     color: GlobalStyles.colors.primary700,
     padding: 6,
     borderRadius: 6,
     fontSize: 18,
+  },
+  buttonContainer: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    marginTop: 16,
+    width: "100%",
+  },
+  button: {
+    backgroundColor: "darkslateblue",
+    padding: 10,
+    borderRadius: 8,
+    alignItems: "center",
+    flex: 1,
+    marginHorizontal: 5,
+  },
+  buttonText: {
+    color: "#fff",
+    fontWeight: "bold",
+    fontSize: 16,
   },
 });

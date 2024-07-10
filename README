@@ -1,0 +1,27 @@
+# ShowUp! FE
+
+--- 
+
+Welcome to ShowUp!
+
+This is the front end API of our application ShowUp!. A transformative new app that allows you to order an entertainer to your friend, family or colleagues doorstep!
+
+To clone this project:
+
+1. Visit the github page listed.
+2. Select clone and copy the URL.
+3. In the terminal on VSCode, type: git clone https://github.com/paul-savage/front-end-show-up.git
+
+Install the following dependencies in the terminal: 
+
+- npm install dotenv
+
+---
+
+To start the application:
+
+- Use the command: npm run start
+
+---
+
+This portfolio project was created as part of a Digital Skills Bootcamp in Software Engineering provided by [Northcoders](https://northcoders.com/)

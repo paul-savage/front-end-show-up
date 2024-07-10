@@ -13,7 +13,7 @@ import {
 import { Picker } from "@react-native-picker/picker";
 import * as ImagePicker from "expo-image-picker";
 import { GlobalContext } from "../../context/global-context";
-import { uploadFile } from "../../utils/apicalls";
+import { uploadFile, deleteEntertainer } from "../../utils/apicalls";
 
 const UserLoggedIn = ({ locations, categories, gotoLoggingIn }) => {
   const { user, setUser, setToken, setIsLoggedIn, token } =
@@ -83,6 +83,23 @@ const UserLoggedIn = ({ locations, categories, gotoLoggingIn }) => {
           setUploading(false);
         });
     }
+  };
+
+  const handleDeleteEntertainer = () => {
+    deleteEntertainer(user.user_id)
+      .then(() => {
+        setIsLoggedIn(false);
+        setUser({});
+        setToken("");
+        gotoLoggingIn();
+      })
+      .catch((err) => {
+        Alert.alert("Error deleting entertainer");
+        setIsLoggedIn(false);
+        setUser({});
+        setToken("");
+        gotoLoggingIn();
+      });
   };
 
   return (
@@ -180,6 +197,16 @@ const UserLoggedIn = ({ locations, categories, gotoLoggingIn }) => {
               >
                 <Text style={styles.buttonText}>Edit Profile</Text>
               </TouchableOpacity>
+            )}
+            {user.user_type === "Entertainer" && (
+              <>
+                <TouchableOpacity
+                  style={styles.button}
+                  onPress={handleDeleteEntertainer}
+                >
+                  <Text style={styles.buttonText}>Delete Profile</Text>
+                </TouchableOpacity>
+              </>
             )}
             <TouchableOpacity style={styles.button} onPress={handleChoosePhoto}>
               <Text style={styles.buttonText}>Upload Photo</Text>

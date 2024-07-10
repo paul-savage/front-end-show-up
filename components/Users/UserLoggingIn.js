@@ -13,6 +13,8 @@ import { GlobalContext } from "../../context/global-context";
 import { authenticateUser, me } from "../../utils/apicalls";
 
 const UserLoggingIn = ({
+  locations,
+  categories,
   loginName,
   setLoginName,
   password,
@@ -49,7 +51,7 @@ const UserLoggingIn = ({
           })
           .catch((err) => {
             Alert.alert(
-              "Invalide username or password",
+              "Invalid username or password",
               "Review credentials, or try again later"
             );
             console.log(err);
@@ -57,7 +59,7 @@ const UserLoggingIn = ({
       })
       .catch((err) => {
         Alert.alert(
-          "Invalide username or password",
+          "Invalid username or password",
           "Review credentials, or try again later"
         );
         console.log(err);
@@ -84,10 +86,11 @@ const UserLoggingIn = ({
       last_name: "",
       email: "",
       user_type: "Entertainer",
-      category: "",
-      location: "",
+      category: categories[0],
+      location: locations[0],
       entertainer_name: "",
       description: "",
+      profile_img_url: "",
       price: 0,
     });
     gotoCreateEntertainer();

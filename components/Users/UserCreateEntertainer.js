@@ -13,8 +13,11 @@ import { useState, useContext } from "react";
 import { GlobalContext } from "../../context/global-context";
 import { authenticateUser, me, registerUser } from "../../utils/apicalls";
 import { GlobalStyles } from "../../constants/styles";
+import { Picker } from "@react-native-picker/picker";
 
 const UserCreateEntertainer = ({
+  locations,
+  categories,
   template,
   setTemplate,
   gotoLoggedIn,
@@ -107,22 +110,44 @@ const UserCreateEntertainer = ({
               autoCorrect={false}
               onChangeText={handleChangeEntertainer.bind(this, "email")}
             />
-            <Text style={styles.label}>Enter category:</Text>
-            <TextInput
-              style={styles.input}
-              value={template.category}
-              autoCapitalize="none"
-              autoCorrect={false}
-              onChangeText={handleChangeEntertainer.bind(this, "category")}
-            />
-            <Text style={styles.label}>Enter location:</Text>
-            <TextInput
-              style={styles.input}
-              value={template.location}
-              autoCapitalize="none"
-              autoCorrect={false}
-              onChangeText={handleChangeEntertainer.bind(this, "location")}
-            />
+            <Text style={styles.label}>Select category:</Text>
+            <View style={styles.pickerWrapper}>
+              <Picker
+                style={styles.pickerItem}
+                //itemStyle={{ height: 50 }}
+                selectedValue={template.category}
+                onValueChange={(itemValue) =>
+                  handleChangeEntertainer("category", itemValue)
+                }
+              >
+                {categories.map((category) => (
+                  <Picker.Item
+                    key={category.category}
+                    label={category.category}
+                    value={category.category}
+                  />
+                ))}
+              </Picker>
+            </View>
+            <Text style={styles.label}>Select location:</Text>
+            <View style={styles.pickerWrapper}>
+              <Picker
+                style={styles.pickerItem}
+                //itemStyle={{ height: 50 }}
+                selectedValue={template.location}
+                onValueChange={(itemValue) =>
+                  handleChangeEntertainer("location", itemValue)
+                }
+              >
+                {locations.map((location) => (
+                  <Picker.Item
+                    key={location.location}
+                    label={location.location}
+                    value={location.location}
+                  />
+                ))}
+              </Picker>
+            </View>
             <Text style={styles.label}>Enter entertainer name:</Text>
             <TextInput
               style={styles.input}
@@ -152,6 +177,17 @@ const UserCreateEntertainer = ({
               autoCorrect={false}
               keyboardType="number-pad"
               onChangeText={handleChangeEntertainer.bind(this, "price")}
+            />
+            <Text style={styles.label}>Enter image URL:</Text>
+            <TextInput
+              style={styles.input}
+              value={template.profile_img_url}
+              autoCapitalize="none"
+              autoCorrect={false}
+              onChangeText={handleChangeEntertainer.bind(
+                this,
+                "profile_img_url"
+              )}
             />
             <View style={styles.buttonWrapper}>
               <Button
@@ -206,5 +242,18 @@ const styles = StyleSheet.create({
   inputMultiLine: {
     minHeight: 100,
     textAlignVertical: "top",
+  },
+  pickerWrapper: {
+    borderWidth: 1,
+    borderColor: GlobalStyles.colors.primary200,
+    borderRadius: 8,
+    marginVertical: 10,
+  },
+  pickerItem: {
+    //height: 50,
+  },
+  text: {
+    fontSize: 16,
+    marginBottom: 10,
   },
 });

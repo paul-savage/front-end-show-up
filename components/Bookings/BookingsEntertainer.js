@@ -5,11 +5,16 @@ import {
   Image,
   StyleSheet,
   ScrollView,
+  TouchableOpacity,
 } from "react-native";
 import { useEffect, useState } from "react";
 import { useContext } from "react";
 import { GlobalContext } from "../../context/global-context";
-import { getEntertainerBookings, deleteBooking, confirmBooking } from "../../utils/apicalls";
+import {
+  getEntertainerBookings,
+  deleteBooking,
+  confirmBooking,
+} from "../../utils/apicalls";
 import { reformatTime } from "../../utils/utils";
 import LoadingOverlay from "../LoadingOverlay";
 
@@ -33,37 +38,43 @@ const BookingsEntertainer = () => {
       });
   }, []);
 
-
   const handleCancellation = (id) => {
-    deleteBooking(id).then(() => {
-      setBookings(bookings.filter((booking) => {
-        return booking.booking_id !== id
-      }))
-    })
-    .catch((err) => {
-      console.log(err)
-    })
-  }
+    deleteBooking(id)
+      .then(() => {
+        setBookings(
+          bookings.filter((booking) => {
+            return booking.booking_id !== id;
+          })
+        );
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
 
   const convertDateToTimestamp = (event_date) => {
     return new Date(event_date).getTime();
-  }
+  };
 
   const sortBookings = (bookings) => {
-    const bookingsCopy = [...bookings]
-    return bookingsCopy.sort((a,b) => {return convertDateToTimestamp(a.event_date) > convertDateToTimestamp(b.event_date) ? 1 : -1})
-  }
+    const bookingsCopy = [...bookings];
+    return bookingsCopy.sort((a, b) => {
+      return convertDateToTimestamp(a.event_date) >
+        convertDateToTimestamp(b.event_date)
+        ? 1
+        : -1;
+    });
+  };
 
-
- 
   const handleConfirmation = (id) => {
-    confirmBooking(id).then(() => {
-      setBookings(sortBookings(bookings))
-    })
-    .catch((err) => {
-      console.log(err)
-    })
-  }
+    confirmBooking(id)
+      .then(() => {
+        setBookings(sortBookings(bookings));
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
 
   if (isLoading) {
     return <LoadingOverlay />;
@@ -103,8 +114,22 @@ const BookingsEntertainer = () => {
                 <Text style={styles.bookingText}>
                   Address: {booking.address}
                 </Text>
-                {booking.status === 'pending' ? <Button title='Confirm' onPress={handleConfirmation.bind(this, booking.booking_id)}/>: <Text>Booking Confirmed!</Text>}
-                <Button onPress={handleCancellation.bind(this, booking.booking_id)} title='Cancel Booking' />
+                {booking.status === 'pending' ? (
+                  <TouchableOpacity
+                    style={styles.button}
+                    onPress={handleConfirmation.bind(this, booking.booking_id)}
+                  >
+                    <Text style={styles.buttonText}>Confirm</Text>
+                  </TouchableOpacity>
+                ) : (
+                  <Text style={styles.confirmText}>Booking Confirmed!</Text>
+                )}
+                <TouchableOpacity
+                  style={styles.button}
+                  onPress={handleCancellation.bind(this, booking.booking_id)}
+                >
+                  <Text style={styles.buttonText}>Cancel Booking</Text>
+                </TouchableOpacity>
               </View>
             ))}
           </View>
@@ -134,15 +159,30 @@ const styles = StyleSheet.create({
   },
   bookingContainer: {
     borderRadius: 10,
-    borderWidth: 1,
+    borderWidth: 10,
     borderColor: "lightgrey",
-    marginTop: 10,
+    marginTop: 15,
     marginBottom: 0,
     padding: 8,
   },
   bookingText: {
     fontSize: 16,
-    textAlign: "center",
+    textAlign: "left",
     marginVertical: 6,
   },
+  button: {
+    backgroundColor: "#433a83",
+    paddingVertical: 10,
+    paddingHorizontal: 100,
+    borderRadius: 8,
+    marginTop: 10,
+  },
+  buttonText: {
+    color: "#fff",
+    fontSize: 16,
+    textAlign: "center",
+  },
+  confirmText: {
+    color: "red",
+  }
 });

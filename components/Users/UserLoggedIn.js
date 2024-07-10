@@ -329,6 +329,7 @@ const styles = StyleSheet.create({
   },
   logoutButton: {
     marginTop: 20,
+    width:100,
   },
   uploadedImage: {
     width: 100,

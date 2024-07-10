@@ -22,6 +22,7 @@ const UserLoggedIn = ({ locations, categories, gotoLoggingIn }) => {
   const [editMode, setEditMode] = useState(false);
   const [uploading, setUploading] = useState(false);
   const [uploadedImage, setUploadedImage] = useState(null);
+  const [mediaFiles, setMediaFiles] = useState([]); // State to store uploaded media files
   const [editedUser, setEditedUser] = useState({
     category: user.category,
     location: user.location,
@@ -41,8 +42,6 @@ const UserLoggedIn = ({ locations, categories, gotoLoggingIn }) => {
   };
 
   const handleSaveProfile = () => {
-    // Save profile logic here
-    // Assume updateUser API call is used to update the user profile
     setUser({ ...user, ...editedUser });
     setEditMode(false);
   };
@@ -51,7 +50,7 @@ const UserLoggedIn = ({ locations, categories, gotoLoggingIn }) => {
     setEditedUser({ ...editedUser, [key]: value });
   };
 
-  const handleChoosePhoto = async () => {
+  const handleChooseProfilePhoto = async () => {
     const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
     if (status !== "granted") {
       alert("Sorry, we need camera roll permissions to make this work!");
@@ -77,6 +76,42 @@ const UserLoggedIn = ({ locations, categories, gotoLoggingIn }) => {
       uploadFile(file, token)
         .then((res) => {
           setUploadedImage(asset.uri);
+          setUploading(false);
+        })
+        .catch((err) => {
+          console.log(err);
+          setUploading(false);
+        });
+    }
+  };
+
+  const handleChooseMedia = async () => {
+    const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
+    if (status !== "granted") {
+      alert("Sorry, we need camera roll permissions to make this work!");
+      return;
+    }
+
+    let result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.All,
+      allowsMultipleSelection: true,
+      quality: 1,
+    });
+
+    if (!result.canceled && result.assets && result.assets.length > 0) {
+      const files = result.assets.map((asset) => ({
+        uri: asset.uri,
+        name: asset.uri.split("/").pop(),
+        type: asset.type || "image/jpeg",
+      }));
+
+      setUploading(true);
+      const uploadPromises = files.map((file) => uploadFile(file, token));
+
+      Promise.all(uploadPromises)
+        .then((responses) => {
+          const uris = responses.map((res, index) => files[index].uri);
+          setMediaFiles((prev) => [...prev, ...uris]);
           setUploading(false);
         })
         .catch((err) => {
@@ -218,8 +253,14 @@ const UserLoggedIn = ({ locations, categories, gotoLoggingIn }) => {
                 </TouchableOpacity>
               </>
             )}
-            <TouchableOpacity style={styles.button} onPress={handleChoosePhoto}>
-              <Text style={styles.buttonText}>Upload Photo</Text>
+            <TouchableOpacity
+              style={styles.button}
+              onPress={handleChooseProfilePhoto}
+            >
+              <Text style={styles.buttonText}>Upload Profile Picture</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.button} onPress={handleChooseMedia}>
+              <Text style={styles.buttonText}>Upload Media</Text>
             </TouchableOpacity>
             {uploading && <ActivityIndicator size="large" color="#0000ff" />}
             {uploadedImage && (
@@ -316,11 +357,11 @@ const styles = StyleSheet.create({
   },
   button: {
     backgroundColor: "darkslateblue",
-    padding: 10,
+    padding: 3,
     borderRadius: 8,
     alignItems: "center",
-    marginTop: 20,
-    width: "100%",
+    marginTop: 5,
+    width: "70%",
   },
   buttonText: {
     color: "#fff",
@@ -328,8 +369,9 @@ const styles = StyleSheet.create({
     fontSize: 16,
   },
   logoutButton: {
-    marginTop: 20,
-    width:100,
+    marginTop: 1,
+    width: 100,
+    height: 30,
   },
   uploadedImage: {
     width: 100,

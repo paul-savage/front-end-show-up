@@ -28,7 +28,7 @@ const EntertainerDetail = ({
       useNativeDriver: true,
     }).start();
   }, [fadeAnim]);
-
+  console.log(entertainer)
   const handleContactMe = () => {
     navigation.navigate("Messaging", {
       screen: "ConversationScreen",
@@ -89,8 +89,16 @@ const EntertainerDetail = ({
                 >
                   <Text style={styles.buttonText}>Log in to contact</Text>
                 </TouchableOpacity>
-              )}
+              )}  
             </View>
+            {entertainer.media.map((image) => 
+                <View key={image} style={styles.card}>
+                <Image
+              style={styles.image}
+              source={{ uri: image }}
+            />
+            </View>
+              )}
           </View>
         </ScrollView>
       </Animated.View>

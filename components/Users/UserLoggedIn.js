@@ -9,6 +9,7 @@ import {
   SafeAreaView,
   ScrollView,
   ActivityIndicator,
+  Alert,
 } from "react-native";
 import { Picker } from "@react-native-picker/picker";
 import * as ImagePicker from "expo-image-picker";
@@ -86,20 +87,29 @@ const UserLoggedIn = ({ locations, categories, gotoLoggingIn }) => {
   };
 
   const handleDeleteEntertainer = () => {
-    deleteEntertainer(user.user_id)
-      .then(() => {
-        setIsLoggedIn(false);
-        setUser({});
-        setToken("");
-        gotoLoggingIn();
-      })
-      .catch((err) => {
-        Alert.alert("Error deleting entertainer");
-        setIsLoggedIn(false);
-        setUser({});
-        setToken("");
-        gotoLoggingIn();
-      });
+    Alert.alert("Confirm Account deletion", "Delete Account?", [
+      {
+        text: "Cancel",
+        onPress: () => console.log("deletion cancelled"),
+        style: "cancel",
+      },
+      {
+        text: "OK",
+        onPress: () => {
+          deleteEntertainer(user.user_id)
+            .then(() => {
+              console.log("Entertainer deleted");
+            })
+            .catch((err) => {
+              console.log("Error deleting entertainer");
+            });
+          setIsLoggedIn(false);
+          setUser({});
+          setToken("");
+          gotoLoggingIn();
+        },
+      },
+    ]);
   };
 
   return (

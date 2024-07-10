@@ -78,19 +78,17 @@ export const uploadFile = (file, token) => {
   const form = new FormData();
   form.append("file", file);
 
-  const headers = { 
-    headers: { 
-      Authorization: `${token}`, 
-      "Content-Type": "multipart/form-data" 
-    } 
+  const headers = {
+    headers: {
+      Authorization: `${token}`,
+      "Content-Type": "multipart/form-data",
+    },
   };
 
   return showUp.post("/upload", form, headers).then((response) => {
     return response.data;
   });
 };
-
-
 
 export const conversations = (token) => {
   const headers = { headers: { Authorization: `${token}` } };
@@ -293,7 +291,6 @@ export const getBookings = () => {
   });
 };
 
-
 export const getCustomerBookings = (token, id) => {
   const headers = { headers: { Authorization: `${token}` } };
   return showUp.get(`/customer-bookings/${id}`, headers).then((response) => {
@@ -309,13 +306,18 @@ export const getEntertainerBookings = (token, id) => {
 };
 
 export const deleteBooking = (id) => {
-  return showUp.delete(`/bookings/${id}`)
-}
+  return showUp.delete(`/bookings/${id}`);
+};
 
 export const confirmBooking = (id) => {
-  return showUp.patch(`/bookings/${id}`, {status: 'confirmed'}).then((response) => {
-    console.log(response.data)
-    return response.data.booking
-  })
-}
+  return showUp
+    .patch(`/bookings/${id}`, { status: "confirmed" })
+    .then((response) => {
+      console.log(response.data);
+      return response.data.booking;
+    });
+};
 
+export const deleteEntertainer = (id) => {
+  return showUp.delete(`/entertainers/${id}`);
+};

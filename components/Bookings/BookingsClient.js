@@ -5,6 +5,7 @@ import {
   Image,
   StyleSheet,
   ScrollView,
+  TouchableOpacity,
 } from "react-native";
 import { useEffect, useState } from "react";
 import { useContext } from "react";
@@ -33,17 +34,19 @@ const BookingsClient = () => {
       });
   }, []);
 
-
   const handleCancellation = (id) => {
-    deleteBooking(id).then(() => {
-      setBookings(bookings.filter((booking) => {
-        return booking.booking_id !== id
-      }))
-    })
-    .catch((err) => {
-      console.log(err)
-    })
-  }
+    deleteBooking(id)
+      .then(() => {
+        setBookings(
+          bookings.filter((booking) => {
+            return booking.booking_id !== id;
+          })
+        );
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
 
   if (isLoading) {
     return <LoadingOverlay />;
@@ -80,8 +83,17 @@ const BookingsClient = () => {
                 <Text style={styles.bookingText}>
                   Address: {booking.address}
                 </Text>
-                {booking.status === 'pending' ? <Text>Awaiting confirmation </Text> : <Text>Booking Confirmed!</Text>}
-                <Button onPress={handleCancellation.bind(this, booking.booking_id)} title='Cancel Booking' />
+                {booking.status === "pending" ? (
+                  <Text style={styles.waitText}>Awaiting confirmation</Text>
+                ) : (
+                  <Text style={styles.confirmText}>Booking Confirmed!</Text>
+                )}
+                <TouchableOpacity
+                  style={styles.button}
+                  onPress={handleCancellation.bind(this, booking.booking_id)}
+                >
+                  <Text style={styles.buttonText}>Cancel Booking</Text>
+                </TouchableOpacity>
               </View>
             ))}
           </View>
@@ -103,7 +115,7 @@ const styles = StyleSheet.create({
   heading: {
     fontSize: 18,
     fontWeight: "bold",
-    color: "#eb1064",
+    color: "#a04000",
     textAlign: "center",
   },
   inputContainer: {
@@ -112,14 +124,32 @@ const styles = StyleSheet.create({
   },
   bookingContainer: {
     borderRadius: 10,
-    borderWidth: 1,
+    borderWidth: 10,
     borderColor: "lightgrey",
-    marginTop: 10,
+    marginTop: 15,
     padding: 8,
   },
   bookingText: {
     fontSize: 16,
-    textAlign: "center",
+    textAlign: "left",
     marginVertical: 6,
   },
+  button: {
+    backgroundColor: "#433a83",
+    paddingVertical: 10,
+    paddingHorizontal: 100,
+    borderRadius: 8,
+    marginTop: 10,
+  },
+  buttonText: {
+    color: "#fff",
+    fontSize: 16,
+    textAlign: "center",
+  },
+  waitText:{
+    color: "blue",
+  },
+  confirmText: {
+    color: "red",
+  }
 });

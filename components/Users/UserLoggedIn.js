@@ -1,4 +1,4 @@
-import React, { useState, useContext, useEffect } from 'react';
+import React, { useState, useContext, useEffect } from "react";
 import {
   View,
   Text,
@@ -9,17 +9,16 @@ import {
   SafeAreaView,
   ScrollView,
   ActivityIndicator,
-} from 'react-native';
-import { Picker } from '@react-native-picker/picker';
-import * as ImagePicker from 'expo-image-picker';
-import { GlobalContext } from '../../context/global-context';
-import { getCategories, getLocations, uploadFile } from '../../utils/apicalls';
+} from "react-native";
+import { Picker } from "@react-native-picker/picker";
+import * as ImagePicker from "expo-image-picker";
+import { GlobalContext } from "../../context/global-context";
+import { uploadFile } from "../../utils/apicalls";
 
-const UserLoggedIn = ({ gotoLoggingIn }) => {
-  const { user, setUser, setToken, setIsLoggedIn, token } = useContext(GlobalContext);
+const UserLoggedIn = ({ locations, categories, gotoLoggingIn }) => {
+  const { user, setUser, setToken, setIsLoggedIn, token } =
+    useContext(GlobalContext);
   const [editMode, setEditMode] = useState(false);
-  const [categories, setCategories] = useState([]);
-  const [locations, setLocations] = useState([]);
   const [uploading, setUploading] = useState(false);
   const [uploadedImage, setUploadedImage] = useState(null);
   const [editedUser, setEditedUser] = useState({
@@ -29,15 +28,10 @@ const UserLoggedIn = ({ gotoLoggingIn }) => {
     price: user.price,
   });
 
-  useEffect(() => {
-    getCategories().then((data) => setCategories(data));
-    getLocations().then((data) => setLocations(data));
-  }, []);
-
   const handleLogOut = () => {
     setIsLoggedIn(false);
     setUser({});
-    setToken('');
+    setToken("");
     gotoLoggingIn();
   };
 
@@ -58,8 +52,8 @@ const UserLoggedIn = ({ gotoLoggingIn }) => {
 
   const handleChoosePhoto = async () => {
     const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
-    if (status !== 'granted') {
-      alert('Sorry, we need camera roll permissions to make this work!');
+    if (status !== "granted") {
+      alert("Sorry, we need camera roll permissions to make this work!");
       return;
     }
 
@@ -74,8 +68,8 @@ const UserLoggedIn = ({ gotoLoggingIn }) => {
       const asset = result.assets[0];
       const file = {
         uri: asset.uri,
-        name: asset.uri.split('/').pop(),
-        type: asset.type || 'image/jpeg',
+        name: asset.uri.split("/").pop(),
+        type: asset.type || "image/jpeg",
       };
 
       setUploading(true);
@@ -103,20 +97,26 @@ const UserLoggedIn = ({ gotoLoggingIn }) => {
             <Text style={styles.eName}>{user.entertainer_name}</Text>
             <View style={styles.profileInfo}>
               <Text style={styles.label}>Username: {user.username}</Text>
-              <Text style={styles.label}>Name: {user.first_name} {user.last_name}</Text>
+              <Text style={styles.label}>
+                Name: {user.first_name} {user.last_name}
+              </Text>
               <Text style={styles.label}>Email: {user.email}</Text>
               <Text style={styles.label}>User Type: {user.user_type}</Text>
-              {user.user_type === 'Entertainer' && (
+              {user.user_type === "Entertainer" && (
                 <>
                   <Text style={styles.label}>Category:</Text>
                   {editMode ? (
                     <Picker
                       selectedValue={editedUser.category}
                       style={styles.picker}
-                      onValueChange={(value) => handleChange('category', value)}
+                      onValueChange={(value) => handleChange("category", value)}
                     >
                       {categories.map((category) => (
-                        <Picker.Item key={category.category} label={category.category} value={category.category} />
+                        <Picker.Item
+                          key={category.category}
+                          label={category.category}
+                          value={category.category}
+                        />
                       ))}
                     </Picker>
                   ) : (
@@ -127,10 +127,14 @@ const UserLoggedIn = ({ gotoLoggingIn }) => {
                     <Picker
                       selectedValue={editedUser.location}
                       style={styles.picker}
-                      onValueChange={(value) => handleChange('location', value)}
+                      onValueChange={(value) => handleChange("location", value)}
                     >
                       {locations.map((location) => (
-                        <Picker.Item key={location.location} label={location.location} value={location.location} />
+                        <Picker.Item
+                          key={location.location}
+                          label={location.location}
+                          value={location.location}
+                        />
                       ))}
                     </Picker>
                   ) : (
@@ -141,7 +145,9 @@ const UserLoggedIn = ({ gotoLoggingIn }) => {
                     <TextInput
                       style={styles.input}
                       value={editedUser.description}
-                      onChangeText={(value) => handleChange('description', value)}
+                      onChangeText={(value) =>
+                        handleChange("description", value)
+                      }
                     />
                   ) : (
                     <Text style={styles.value}>{user.description}</Text>
@@ -152,7 +158,7 @@ const UserLoggedIn = ({ gotoLoggingIn }) => {
                       style={styles.input}
                       value={String(editedUser.price)}
                       keyboardType="numeric"
-                      onChangeText={(value) => handleChange('price', value)}
+                      onChangeText={(value) => handleChange("price", value)}
                     />
                   ) : (
                     <Text style={styles.value}>£{user.price}</Text>
@@ -161,11 +167,17 @@ const UserLoggedIn = ({ gotoLoggingIn }) => {
               )}
             </View>
             {editMode ? (
-              <TouchableOpacity style={styles.button} onPress={handleSaveProfile}>
+              <TouchableOpacity
+                style={styles.button}
+                onPress={handleSaveProfile}
+              >
                 <Text style={styles.buttonText}>Save Profile</Text>
               </TouchableOpacity>
             ) : (
-              <TouchableOpacity style={styles.button} onPress={handleEditProfile}>
+              <TouchableOpacity
+                style={styles.button}
+                onPress={handleEditProfile}
+              >
                 <Text style={styles.buttonText}>Edit Profile</Text>
               </TouchableOpacity>
             )}
@@ -181,7 +193,10 @@ const UserLoggedIn = ({ gotoLoggingIn }) => {
             )}
           </View>
         </View>
-        <TouchableOpacity style={[styles.button, styles.logoutButton]} onPress={handleLogOut}>
+        <TouchableOpacity
+          style={[styles.button, styles.logoutButton]}
+          onPress={handleLogOut}
+        >
           <Text style={styles.buttonText}>Log Out</Text>
         </TouchableOpacity>
       </ScrollView>
@@ -194,31 +209,31 @@ export default UserLoggedIn;
 const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
-    backgroundColor: '#f8f8f8',
+    backgroundColor: "#f8f8f8",
   },
   scrollContent: {
     flexGrow: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
     paddingVertical: 32,
   },
   rootContainer: {
-    width: '100%',
+    width: "100%",
     maxWidth: 400,
     padding: 20,
     borderRadius: 10,
-    backgroundColor: '#fff',
-    shadowColor: '#000',
+    backgroundColor: "#fff",
+    shadowColor: "#000",
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.25,
     shadowRadius: 3.84,
     elevation: 5,
-    alignItems: 'center',
+    alignItems: "center",
     marginBottom: 20,
   },
   card: {
-    alignItems: 'center',
-    width: '100%',
+    alignItems: "center",
+    width: "100%",
   },
   avatar: {
     width: 100,
@@ -228,51 +243,51 @@ const styles = StyleSheet.create({
   },
   eName: {
     fontSize: 24,
-    fontWeight: 'bold',
-    textAlign: 'center',
+    fontWeight: "bold",
+    textAlign: "center",
     marginVertical: 8,
   },
   profileInfo: {
-    width: '100%',
+    width: "100%",
     marginVertical: 8,
   },
   label: {
     fontSize: 16,
-    color: '#555',
+    color: "#555",
     marginVertical: 4,
-    textAlign: 'left',
-    width: '100%',
+    textAlign: "left",
+    width: "100%",
   },
   value: {
     fontSize: 16,
-    color: '#000',
+    color: "#000",
     marginVertical: 4,
-    textAlign: 'left',
-    width: '100%',
+    textAlign: "left",
+    width: "100%",
   },
   input: {
-    width: '100%',
+    width: "100%",
     padding: 10,
     borderRadius: 8,
     borderWidth: 1,
-    borderColor: '#ccc',
+    borderColor: "#ccc",
     marginBottom: 12,
   },
   picker: {
-    width: '100%',
+    width: "100%",
     marginBottom: 12,
   },
   button: {
-    backgroundColor: 'darkslateblue',
+    backgroundColor: "darkslateblue",
     padding: 10,
     borderRadius: 8,
-    alignItems: 'center',
+    alignItems: "center",
     marginTop: 20,
-    width: '100%',
+    width: "100%",
   },
   buttonText: {
-    color: '#fff',
-    fontWeight: 'bold',
+    color: "#fff",
+    fontWeight: "bold",
     fontSize: 16,
   },
   logoutButton: {

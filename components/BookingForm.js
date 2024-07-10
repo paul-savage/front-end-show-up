@@ -1,4 +1,4 @@
-import { useEffect, useState,useContext } from "react";
+import { useEffect, useState, useContext } from "react";
 import {
   View,
   Text,
@@ -8,13 +8,17 @@ import {
   Button,
   KeyboardAvoidingView,
   ScrollView,
-  Platform, 
+  Platform,
   Modal,
   Pressable,
 } from "react-native";
 import { Calendar } from "react-native-calendars";
 import { GlobalStyles } from "../constants/styles";
-import { getAvailability, postBooking, postAvailability } from "../utils/booking-form-api-call";
+import {
+  getAvailability,
+  postBooking,
+  postAvailability,
+} from "../utils/booking-form-api-call";
 import moment from "moment";
 import { GlobalContext } from "../context/global-context";
 
@@ -23,8 +27,7 @@ const BookingForm = ({ entertainer, onShowEntertainers }) => {
   const [selectedDate, setSelectedDate] = useState({});
   const firstDayOfCurrentMonth = moment().format("YYYY-MM-DD");
   const [modalVisible, setModalVisible] = useState(false);
-  const {user, token} = useContext(GlobalContext)
-
+  const { user, token } = useContext(GlobalContext);
 
   useEffect(() => {
     getAvailability(entertainer.user_id)
@@ -54,8 +57,6 @@ const BookingForm = ({ entertainer, onShowEntertainers }) => {
     address: "",
   });
 
- 
-
   const onDayPress = (day) => {
     setSelectedDate(day.dateString);
     setBookingTemplate((current) => {
@@ -78,20 +79,26 @@ const BookingForm = ({ entertainer, onShowEntertainers }) => {
     const availabilityObject = {
       entertainer_id: entertainer.user_id,
       date: bookingTemplate.event_date,
-      available: false
-    }
-    
-    return Promise.all([postAvailability(availabilityObject), postBooking(token, bookingTemplate)]).then((response) => {
-      setModalVisible(true)
-    }).catch((err) => {
-      console.log(err)
-    })
+      available: false,
+    };
 
+    return Promise.all([
+      postAvailability(availabilityObject),
+      postBooking(token, bookingTemplate),
+    ])
+      .then((response) => {
+        setModalVisible(true);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   };
 
   return (
     <>
-      <KeyboardAvoidingView behavior={Platform.OS === "ios" ? "padding" : "height"}>
+      <KeyboardAvoidingView
+        behavior={Platform.OS === "ios" ? "padding" : "height"}
+      >
         <ScrollView>
           <View style={styles.rootContainer}>
             <Image
@@ -107,60 +114,72 @@ const BookingForm = ({ entertainer, onShowEntertainers }) => {
                 onDayPress={onDayPress}
               />
               <View style={styles.inputContainer}>
-              <Text style={styles.label} value={bookingTemplate.event_details}>
-                Enter event details:
-              </Text>
-              <TextInput
-                style={[styles.input, styles.inputMultiLine]}
-                onChangeText={handleChange.bind(this, "event_details")}
-                multiline={true}
-                numberOfLines={3}
-                placeholder="Please inform the entertainer on the type of event and suggest a time!"
-              ></TextInput>
-              <Text style={styles.label}>Enter address:</Text>
-              <TextInput
-                style={styles.input}
-                value={bookingTemplate.address}
-                onChangeText={handleChange.bind(this, "address")}
-                textAlignVertical="top"
-              ></TextInput>
+                <Text
+                  style={styles.label}
+                  value={bookingTemplate.event_details}
+                >
+                  Enter event details:
+                </Text>
+                <TextInput
+                  style={[styles.input, styles.inputMultiLine]}
+                  onChangeText={handleChange.bind(this, "event_details")}
+                  multiline={true}
+                  numberOfLines={3}
+                  placeholder="Please inform the entertainer on the type of event and suggest a time!"
+                ></TextInput>
+                <Text style={styles.label}>Enter address:</Text>
+                <TextInput
+                  style={styles.input}
+                  value={bookingTemplate.address}
+                  onChangeText={handleChange.bind(this, "address")}
+                  textAlignVertical="top"
+                ></TextInput>
               </View>
             </View>
             <View style={styles.buttonWrapper}>
-              <Button title="Confirm Booking" onPress={handleConfirmBooking} />
-              <Button title="Back" onPress={onShowEntertainers} />
+              <Pressable style={styles.button} onPress={handleConfirmBooking}>
+                <Text style={styles.buttonText}>Confirm Booking</Text>
+              </Pressable>
+              <Pressable style={styles.button} onPress={onShowEntertainers}>
+                <Text style={styles.buttonText}>Return to Home</Text>
+              </Pressable>
             </View>
           </View>
         </ScrollView>
       </KeyboardAvoidingView>
 
-
       <View style={styles.centeredView}>
-      <Modal
-        animationType="slide"
-        transparent={true}
-        visible={modalVisible}
-        onRequestClose={() => {
-          setModalVisible(!modalVisible);
-          onShowEntertainers();
-        }}>
-        <View style={styles.centeredView}>
-          <View style={styles.modalView}>
-            <Text style={styles.modalText}>Booking Confirmed!</Text>
-            <Pressable
-              style={[styles.button, styles.buttonClose]}
-              onPress={() => {setModalVisible(!modalVisible); onShowEntertainers()}}>
-              <Text style={styles.textStyle}>Go Home</Text>
-            </Pressable>
+        <Modal
+          animationType="slide"
+          transparent={true}
+          visible={modalVisible}
+          onRequestClose={() => {
+            setModalVisible(!modalVisible);
+            onShowEntertainers();
+          }}
+        >
+          <View style={styles.centeredView}>
+            <View style={styles.modalView}>
+              <Text style={styles.modalText}>Booking Confirmed!</Text>
+              <Pressable
+                style={[styles.button, styles.buttonClose]}
+                onPress={() => {
+                  setModalVisible(!modalVisible);
+                  onShowEntertainers();
+                }}
+              >
+                <Text style={styles.textStyle}>Return to Home</Text>
+              </Pressable>
+            </View>
           </View>
-        </View>
-      </Modal>
-      <Pressable
-        style={[styles.button, styles.buttonOpen]}
-        onPress={() => setModalVisible(true)}>
-        <Text style={styles.textStyle}>Show Modal</Text>
-      </Pressable>
-    </View>
+        </Modal>
+        <Pressable
+          style={[styles.button, styles.buttonOpen]}
+          onPress={() => setModalVisible(true)}
+        >
+          <Text style={styles.textStyle}>Show Modal</Text>
+        </Pressable>
+      </View>
     </>
   );
 };
@@ -189,23 +208,28 @@ const styles = StyleSheet.create({
   },
   buttonWrapper: {
     marginVertical: 8,
+    flexDirection: "row",
+    justifyContent: "space-between",
+    width: "80%",
   },
   label: {
-    fontSize: 18,
+    fontSize: 16,
     color: GlobalStyles.colors.primary100,
-    color: "black",
-    marginBottom: 4,
-    textAlign: "center",
+    color: "#483D8B",
+    marginBottom: 8,
+    marginTop: 20,
+    textAlign: "left",
   },
   input: {
-    backgroundColor: GlobalStyles.colors.primary100,
+    backgroundColor: "#BEB3F2",
     color: GlobalStyles.colors.primary700,
     padding: 6,
     borderRadius: 6,
     fontSize: 18,
   },
   inputMultiLine: {
-    minHeight: 100,
+    height: 100,
+    width: 350,
     textAlignVertical: "top",
   },
   invalidLabel: {
@@ -222,20 +246,24 @@ const styles = StyleSheet.create({
   image: {
     width: 100,
     height: 100,
+    borderRadius: 20,
+    marginBottom: 15,
   },
   centeredView: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
     marginTop: 22,
   },
   modalView: {
     margin: 20,
-    backgroundColor: 'white',
+    height: 150,
+    width: 400,
+    backgroundColor: "white",
     borderRadius: 20,
     padding: 35,
-    alignItems: 'center',
-    shadowColor: '#000',
+    alignItems: "center",
+    shadowColor: "#000",
     shadowOffset: {
       width: 0,
       height: 2,
@@ -245,23 +273,32 @@ const styles = StyleSheet.create({
     elevation: 5,
   },
   button: {
-    borderRadius: 20,
+    backgroundColor: "#483D8B",
+    borderRadius: 8,
     padding: 10,
-    elevation: 2,
+    alignItems: "center",
+    justifyContent: "center",
+    width: "48%",
+    flex: 1,
+    marginHorizontal: 5,
+  },
+  buttonText: {
+    color: "white",
+    fontWeight: "bold",
   },
   buttonOpen: {
-    backgroundColor: '#F194FF',
+    backgroundColor: "#F194FF",
   },
   buttonClose: {
-    backgroundColor: '#2196F3',
+    backgroundColor: "#2196F3",
   },
   textStyle: {
-    color: 'white',
-    fontWeight: 'bold',
-    textAlign: 'center',
+    color: "white",
+    fontWeight: "bold",
+    textAlign: "center",
   },
   modalText: {
     marginBottom: 15,
-    textAlign: 'center',
+    textAlign: "center",
   },
 });

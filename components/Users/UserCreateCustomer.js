@@ -105,19 +105,19 @@ const UserCreateCustomer = ({
               autoCorrect={false}
               onChangeText={handleChangeClient.bind(this, "email")}
             />
-           <View style={styles.buttonContainer}>
+            <View style={styles.buttonContainer}>
               <TouchableOpacity
-              style={styles.button}
+                style={styles.button}
                 onPress={handleClientCreation}
-               >
+              >
                 <Text style={styles.buttonText}>Create Account</Text>
-              </TouchableOpacity> 
-            <TouchableOpacity
-              style={styles.button}
-                onPress={handleClientCreation}
-               >
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={styles.button}
+                onPress={handleCancelClientCreation}
+              >
                 <Text style={styles.buttonText}>Cancel</Text>
-              </TouchableOpacity> 
+              </TouchableOpacity>
             </View>
           </View>
         </View>

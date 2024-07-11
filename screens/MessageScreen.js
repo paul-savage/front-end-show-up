@@ -23,7 +23,7 @@ function MessageScreen() {
     me(token).then((user) => {
       console.log("Fetched current user:", user);
       setCurrentUser(user);
-    });
+    }).catch((err) => {console.log(err)})
   }, [token]);
 
   const fetchConversations = useCallback(() => {
@@ -40,6 +40,7 @@ function MessageScreen() {
           setData(response);
         }
       })
+      .catch((err) => {console.log(err)})
       .finally(() => setRefreshing(false));
   }, [token, currentUser]);
 

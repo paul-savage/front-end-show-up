@@ -34,14 +34,13 @@ function ConversationScreen({ route, navigation }) {
     me(token).then((user) => {
       console.log("Fetched current user:", user); // Debugging log
       setCurrentUser(user);
-    });
+    }).catch((err) => {console.log(err)})
   }, [token]);
 
   const fetchConversation = useCallback(() => {
     setRefreshing(true);
     getConversation(token, username)
       .then((conversation) => {
-        console.log("Fetched conversation:", conversation);
         setData((prevData) => {
           const newMessages = conversation.filter(
             (newMsg) =>
@@ -63,6 +62,9 @@ function ConversationScreen({ route, navigation }) {
         else if (route.params.recipientId) {
           setRecipientId(route.params.recipientId);
         }
+      })
+      .catch((err) => {
+        console.log(err)
       })
       .finally(() => {
         setRefreshing(false);

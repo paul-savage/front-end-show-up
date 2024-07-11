@@ -32,7 +32,7 @@ function ConversationScreen({ route, navigation }) {
 
   const fetchCurrentUser = useCallback(() => {
     me(token).then((user) => {
-      console.log("Fetched current user:", user); // Debugging log
+      
       setCurrentUser(user);
     }).catch((err) => {console.log(err)})
   }, [token]);
@@ -104,12 +104,12 @@ function ConversationScreen({ route, navigation }) {
         message,
         created_at: new Date(),
       };
-      console.log("Sending message:", newMessage);
+      
       setData((prevData) => [...prevData, newMessage]);
       setMessage("");
       sendMessage(token, recipientId, message)
         .then((sentMessage) => {
-          console.log("Message sent:", sentMessage);
+  
           setData((prevData) => prevData.map(msg => msg.message_id === newMessage.message_id ? sentMessage : msg));
           setTimeout(() => {
             if (flatListRef.current) {

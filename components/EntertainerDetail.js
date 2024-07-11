@@ -8,9 +8,14 @@ import {
   Animated,
   TouchableOpacity,
   SafeAreaView,
+  Dimensions,
+  Platform,
 } from "react-native";
 import { GlobalContext } from "../context/global-context";
 import { useNavigation } from "@react-navigation/native";
+
+const SLIDER_WIDTH = Dimensions.get("window").width + 80;
+const ITEM_WIDTH = Math.round(SLIDER_WIDTH * 0.68);
 
 const EntertainerDetail = ({
   entertainer,
@@ -28,7 +33,7 @@ const EntertainerDetail = ({
       useNativeDriver: true,
     }).start();
   }, [fadeAnim]);
-  console.log(entertainer)
+
   const handleContactMe = () => {
     navigation.navigate("Messaging", {
       screen: "ConversationScreen",
@@ -89,16 +94,21 @@ const EntertainerDetail = ({
                 >
                   <Text style={styles.buttonText}>Log in to contact</Text>
                 </TouchableOpacity>
-              )}  
-            </View>
-            {entertainer.media.map((image) => 
-                <View key={image} style={styles.card}>
-                <Image
-              style={styles.image}
-              source={{ uri: image }}
-            />
-            </View>
               )}
+            </View>
+            {entertainer.media.length > 0 ? (
+              <ScrollView horizontal={true}>
+                <View style={styles.scrollContainer}>
+                  {entertainer.media.map((image) => (
+                    <View key={image} style={styles.scrollImage}>
+                      <View style={styles.scrollImageContainer}>
+                        <Image style={styles.image} source={{ uri: image }} />
+                      </View>
+                    </View>
+                  ))}
+                </View>
+              </ScrollView>
+            ) : null}
           </View>
         </ScrollView>
       </Animated.View>
@@ -161,7 +171,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
-    width: "100%",
+    width: "80%",
     marginBottom: 8,
   },
   eName: {
@@ -169,6 +179,25 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     textAlign: "center",
     marginVertical: 8,
+  },
+  scrollContainer: {
+    flexDirection: "row",
+    paddingVertical: 16,
+  },
+  scrollImageContainer: {
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    elevation: 5,
+    overflow: Platform.OS === "android" ? "hidden" : "visible",
+  },
+  scrollImage: {
+    width: ITEM_WIDTH,
+    padding: 5,
   },
   dName: {
     textAlign: "left",

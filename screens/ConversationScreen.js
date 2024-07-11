@@ -31,10 +31,14 @@ function ConversationScreen({ route, navigation }) {
   const flatListRef = useRef(null);
 
   const fetchCurrentUser = useCallback(() => {
-    me(token).then((user) => {
-      
-      setCurrentUser(user);
-    }).catch((err) => {console.log(err)})
+    me(token)
+      .then((user) => {
+        console.log("Current User:", user); // Debugging line
+        setCurrentUser(user);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   }, [token]);
 
   const fetchConversation = useCallback(() => {
@@ -58,13 +62,12 @@ function ConversationScreen({ route, navigation }) {
               ? message.sender_id
               : message.recipient_id;
           setRecipientId(recipientId);
-        }
-        else if (route.params.recipientId) {
+        } else if (route.params.recipientId) {
           setRecipientId(route.params.recipientId);
         }
       })
       .catch((err) => {
-        console.log(err)
+        console.log(err);
       })
       .finally(() => {
         setRefreshing(false);
@@ -104,13 +107,16 @@ function ConversationScreen({ route, navigation }) {
         message,
         created_at: new Date(),
       };
-      
+
       setData((prevData) => [...prevData, newMessage]);
       setMessage("");
       sendMessage(token, recipientId, message)
         .then((sentMessage) => {
-  
-          setData((prevData) => prevData.map(msg => msg.message_id === newMessage.message_id ? sentMessage : msg));
+          setData((prevData) =>
+            prevData.map((msg) =>
+              msg.message_id === newMessage.message_id ? sentMessage : msg
+            )
+          );
           setTimeout(() => {
             if (flatListRef.current) {
               flatListRef.current.scrollToEnd({ animated: true });
@@ -123,23 +129,25 @@ function ConversationScreen({ route, navigation }) {
     }
   };
 
-  const renderItem = ({ item }) => (
-    <View
-      style={
-        item.sender_username === currentUser.username
-          ? styles.messageRight
-          : styles.messageLeft
-      }
-    >
-      <Text style={styles.messageText}>{item.message}</Text>
-      <Text style={styles.messageTime}>
-        {new Date(item.created_at).toLocaleTimeString([], {
-          hour: "numeric",
-          minute: "numeric",
-        })}
-      </Text>
-    </View>
-  );
+  const renderItem = ({ item }) => {
+    const isCurrentUser = item.sender_username === currentUser?.username;
+    console.log(
+      `Message from ${item.sender_username}: ${
+        isCurrentUser ? "Right" : "Left"
+      }`
+    );
+    return (
+      <View style={isCurrentUser ? styles.messageRight : styles.messageLeft}>
+        <Text style={styles.messageText}>{item.message}</Text>
+        <Text style={styles.messageTime}>
+          {new Date(item.created_at).toLocaleTimeString([], {
+            hour: "numeric",
+            minute: "numeric",
+          })}
+        </Text>
+      </View>
+    );
+  };
 
   return (
     <KeyboardAvoidingView
@@ -198,7 +206,6 @@ const styles = StyleSheet.create({
   messageLeft: {
     alignSelf: "flex-start",
     backgroundColor: "#e5e5ea",
-    borderRadius: 20,
     padding: 10,
     marginVertical: 5,
     maxWidth: "75%",

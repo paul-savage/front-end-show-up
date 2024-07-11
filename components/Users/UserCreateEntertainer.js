@@ -192,17 +192,17 @@ const UserCreateEntertainer = ({
             />
             <View style={styles.buttonContainer}>
               <TouchableOpacity
-              style={styles.button}
+                style={styles.button}
                 onPress={handleEntertainerCreation}
-               >
+              >
                 <Text style={styles.buttonText}>Create Account</Text>
-              </TouchableOpacity> 
-            <TouchableOpacity
-              style={styles.button}
-                onPress={handleEntertainerCreation}
-               >
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={styles.button}
+                onPress={handleCancelEntertainerCreation}
+              >
                 <Text style={styles.buttonText}>Cancel</Text>
-              </TouchableOpacity> 
+              </TouchableOpacity>
             </View>
           </View>
         </View>
